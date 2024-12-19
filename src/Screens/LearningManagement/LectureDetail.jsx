@@ -114,7 +114,7 @@ export const LectureDetails = () => {
                         <div className="col-12 mb-2">
                             <h2 className="mainTitle">
                                 <BackButton />
-                                Lecture Details
+                                Course Details
                             </h2>
                         </div>
                     </div>

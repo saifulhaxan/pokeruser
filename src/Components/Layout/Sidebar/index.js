@@ -102,7 +102,7 @@ export const Sidebar = (props) => {
               <span>
               <FontAwesomeIcon icon={faTableList} />
             </span>
-            <span className="sideLinkText">Help/Support</span>
+            <span className="sideLinkText"> Help/Support</span>
           </Link>
         </li>
       </ul>

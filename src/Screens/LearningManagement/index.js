@@ -183,6 +183,9 @@ export const LectureManagement = () => {
                   </div>
                 </div>
                 <div className="row mb-3">
+                  <div className="col-md-12">
+                    <h3 className="mainTitle">NLHE (No-Limit Hold'em)</h3>
+                  </div>
                   {data?.map((item, index) => (
                     <div className="col-xxl-3 col-xl-4 col-md-6 mb-5" key={index}>
                       <div class="videoCard shadow h-100 rounded-4 overflow-hidden">
