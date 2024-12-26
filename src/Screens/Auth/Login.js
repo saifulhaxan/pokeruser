@@ -86,6 +86,10 @@ const AdminLogin = () => {
                         </div>
                         <Link to={'/forget-password'} className='text-dark text-decoration-underline'>Forget Password?</Link>
                     </div>
+
+                    <div className='signupText text-center mt-3'>
+                        <p className='mb-0'>If you don't have an account please <Link to={'/sign-up'} className='primaryColor'>Sign Up</Link></p>
+                    </div>
                     <div className="mt-4 text-center">
                         <CustomButton variant='primaryButton' text='Login' type='submit' />
                     </div>

@@ -1,95 +1,127 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+// import './App.css'; // Add your CSS styles here
 
-const FileUpload = () => {
-  const chunkSize = 5 * 1024 * 1024; // 5 MB per chunk
-  const maxConcurrentUploads = 4; // Max number of concurrent uploads
-  const [progress, setProgress] = useState(0);
-  const [uploadInfo, setUploadInfo] = useState('Upload Progress: 0%');
+const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
+const BASE_URL = 'https://devapi.archcitylms.com/lectures';
 
-  const initiateUpload = async (file) => {
-    if (!file) {
-      alert('Please select a video file.');
-      return;
-    }
+const ChunkedFileUpload = () => {
+    const [uploadStatus, setUploadStatus] = useState('');
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [cloudinaryResponse, setCloudinaryResponse] = useState(null);
+    const [uploadTime, setUploadTime] = useState(null);
+    const fileInputRef = useRef(null);
+    const connectionId = useRef('');
 
-    const totalChunks = Math.ceil(file.size / chunkSize);
+    const handleFileSelect = (e) => {
+        const files = e.target.files;
+        if (files.length > 0) {
+            uploadFile(files[0]);
+        }
+    };
 
-    // Reset progress
-    setProgress(0);
-    setUploadInfo('Upload Progress: 0%');
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            uploadFile(files[0]);
+        }
+    };
 
-    const chunkQueue = [];
+    const uploadFile = async (file) => {
+        connectionId.current = crypto.randomUUID();
+        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+        setUploadStatus(`Uploading ${file.name}...`);
+        setUploadProgress(0);
 
-    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-      const start = chunkIndex * chunkSize;
-      const end = Math.min(start + chunkSize, file.size);
-      const chunk = file.slice(start, end);
+        const startTime = Date.now();
 
-      const chunkFormData = new FormData();
-      chunkFormData.append('chunkIndex', chunkIndex);
-      chunkFormData.append('totalChunks', totalChunks);
-      chunkFormData.append('fileName', file.name);
-      chunkFormData.append('file', chunk);
+        const eventSource = new EventSource(`${BASE_URL}/progress/${connectionId.current}`);
 
-      const uploadTask = () =>
-        uploadChunk(chunkFormData, chunkIndex, totalChunks);
-      chunkQueue.push(uploadTask);
-    }
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.status === 'success') {
+                const endTime = Date.now();
+                setUploadTime(((endTime - startTime) / 1000).toFixed(2));
+                setUploadStatus('Upload Complete!');
+                setCloudinaryResponse(data.cloudinaryResponse);
+                setUploadProgress(100);
+                eventSource.close();
+            } else if (data.status === 'error') {
+                setUploadStatus(`Error: ${data.error}`);
+                eventSource.close();
+            }
+        };
 
-    while (chunkQueue.length > 0) {
-      const batch = chunkQueue.splice(0, maxConcurrentUploads);
-      const batchPromises = batch.map((task) => task());
-      await Promise.all(batchPromises);
-    }
-  };
+        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+            const start = chunkIndex * CHUNK_SIZE;
+            const end = Math.min(start + CHUNK_SIZE, file.size);
+            const chunk = file.slice(start, end);
 
-  const uploadChunk = async (formData, chunkIndex, totalChunks) => {
-    try {
-      const response = await fetch('https://devapi.archcitylms.com/lectures/upload', {
-        method: 'POST',
-        body: formData,
-      });
+            const formData = new FormData();
+            formData.append('chunkIndex', chunkIndex.toString());
+            formData.append('totalChunks', totalChunks.toString());
+            formData.append('fileName', file.name);
+            formData.append('connectionId', connectionId.current);
+            formData.append('file', chunk);
 
-      if (!response.ok) {
-        throw new Error(`Chunk upload failed: ${response.status}`);
-      }
+            try {
+                const response = await fetch(`${BASE_URL}/upload`, {
+                    method: 'POST',
+                    body: formData,
+                });
 
-      const result = await response.json();
-      updateProgress(chunkIndex, totalChunks);
-    } catch (error) {
-      console.error('Error uploading chunk:', error);
-      setUploadInfo('Error uploading video chunk.');
-    }
-  };
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
 
-  const updateProgress = (chunkIndex, totalChunks) => {
-    const overallProgress = ((chunkIndex + 1) / totalChunks) * 100;
-    setProgress(overallProgress);
-    setUploadInfo(`Upload Progress: ${overallProgress.toFixed(2)}%`);
-  };
+                setUploadProgress(((chunkIndex + 1) / totalChunks) * 100);
+            } catch (error) {
+                setUploadStatus(`Upload failed: ${error.message}`);
+                eventSource.close();
+                break;
+            }
+        }
+    };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) initiateUpload(file);
-  };
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
 
-  return (
-    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', textAlign: 'center' }}>
-      <h1>Upload Video in Chunks</h1>
-      <input type="file" id="videoInput" accept="video/*" onChange={handleFileChange} />
-      <div style={{ marginTop: '20px', width: '100%', backgroundColor: '#f3f3f3', borderRadius: '5px', overflow: 'hidden' }}>
-        <div
-          style={{
-            height: '20px',
-            backgroundColor: '#4caf50',
-            width: `${progress}%`,
-            transition: 'width 0.3s ease',
-          }}
-        />
-      </div>
-      <div style={{ marginTop: '10px', fontSize: '16px' }}>{uploadInfo}</div>
-    </div>
-  );
+    return (
+        <div className="upload-container">
+            <div 
+                className="drop-zone" 
+                onDrop={handleDrop} 
+                onDragOver={handleDragOver}
+            >
+                <h2>Drag and Drop Large File for Upload</h2>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleFileSelect}
+                />
+                <button onClick={() => fileInputRef.current.click()}>Select File</button>
+            </div>
+
+            <div className="progress-bar">
+                <div
+                    className="progress"
+                    style={{ width: `${uploadProgress}%` }}
+                ></div>
+            </div>
+
+            {uploadStatus && <div className="status">{uploadStatus}</div>}
+            {uploadTime && <div className="upload-time">Upload Time: {uploadTime} seconds</div>}
+
+            {cloudinaryResponse && (
+                <div className="cloudinary-response">
+                    <strong>Cloudinary Response:</strong>
+                    <pre>{JSON.stringify(cloudinaryResponse, null, 2)}</pre>
+                </div>
+            )}
+        </div>
+    );
 };
 
-export default FileUpload;
+export default ChunkedFileUpload;

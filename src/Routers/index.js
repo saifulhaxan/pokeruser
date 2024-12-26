@@ -16,6 +16,7 @@ import AdminLogin from "../Screens/Auth/Login";
 import ForgetPassword from "../Screens/Auth/ForgetPassword";
 import ForgetPassword2 from "../Screens/Auth/ForgetPassword2";
 import ForgetPassword3 from "../Screens/Auth/ForgetPassword3";
+import AdminLSignUp from "../Screens/Auth/SignUp";
 import { Dashboard } from "../Screens/Dashboard";
 import { UserManagement } from "../Screens/UserManagement";
 import { AddUser } from "../Screens/UserManagement/AddUser";
@@ -43,6 +44,7 @@ import { LectureManagement } from "../Screens/LearningManagement";
 import { AddLecture } from "../Screens/LearningManagement/AddLecture";
 import { EditLecture } from "../Screens/LearningManagement/EditLecture";
 import { LectureDetails } from "../Screens/LearningManagement/LectureDetail";
+import ChunkedFileUpload from "../Screens/demo/demo";
 // end
 
 
@@ -53,6 +55,7 @@ import ChangePassword from "../Screens/Profile/ChangePassword";
 import { ProtectedRoutes } from "./ProtectedRoutes";
 import VideoUploader from "../Screens/demo";
 import FileUpload from "../Screens/demo/demo";
+import Thankyou from "../Screens/Auth/ThankYou";
 import Error from "../Screens/Error";
 
 
@@ -65,7 +68,10 @@ export default function AdminRouter() {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/forget-password2" element={<ForgetPassword2 />} />
         <Route path="/forget-password3" element={<ForgetPassword3 />} />
-        <Route path="/video" element={<ProtectedRoutes Components={VideoUploader} />} />
+        <Route path="/sign-up" element={<AdminLSignUp />} />
+        <Route path="/thankyou-verification" element={<Thankyou />} />
+        {/* <Route path="/video" element={<ProtectedRoutes Components={VideoUploader} />} /> */}
+        <Route path="/video" element={<ProtectedRoutes Components={ChunkedFileUpload} />} />
         <Route path="/video-upload" element={<ProtectedRoutes Components={FileUpload} />} />
         <Route path="/dashboard" element={<ProtectedRoutes Components={Dashboard} />} />
         <Route path="/user-management" element={<ProtectedRoutes Components={UserManagement} />} />
