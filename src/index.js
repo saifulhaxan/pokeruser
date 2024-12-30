@@ -3,12 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
-
+const stripePromise = loadStripe("pk_test_51QIpJYKYzGM8MJQBPNCrQCcm0E1n3nNziKBwx7Kq8fKyH0JKFhzegzSW8WRcT2lrdTjh1gTGnBTZQaZQ3z1wyfxH00yTtZYH9j");
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <>
-    <App />
+    <Elements stripe={stripePromise}>
+      <App />
+    </Elements>
     <div className='loaderBox d-none'>
       <div className="custom-loader"></div>
     </div>

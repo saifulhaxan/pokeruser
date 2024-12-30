@@ -56,6 +56,7 @@ import { ProtectedRoutes } from "./ProtectedRoutes";
 import VideoUploader from "../Screens/demo";
 import FileUpload from "../Screens/demo/demo";
 import Thankyou from "../Screens/Auth/ThankYou";
+import { Membership } from "../Screens/MemberShip";
 import Error from "../Screens/Error";
 
 
@@ -105,6 +106,8 @@ export default function AdminRouter() {
         <Route path="/add-promotion" element={<ProtectedRoutes Components={AddPromotion} />} />
         <Route path="/edit-promotion/:id" element={<ProtectedRoutes Components={EditPromotion} />} />
         <Route path="/promotion-management/promotion-details/:id" element={<ProtectedRoutes Components={PromotionDetails} />} />
+
+        <Route path="/select-plan" element={<ProtectedRoutes Components={Membership} />} />
 
         <Route path="/profile" element={<ProtectedRoutes Components={Profile} />} />
         <Route path="/profile/edit-profile" element={<ProtectedRoutes Components={EditProfile} />} />

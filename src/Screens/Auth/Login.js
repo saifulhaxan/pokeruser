@@ -35,10 +35,17 @@ const AdminLogin = () => {
     useEffect(() => {
         if (LoginResponse) {
             localStorage.setItem('login', LoginResponse?.token);
-            localStorage.setItem('username', LoginResponse?.user?.name);
-            if(LoginResponse?.token) {
+            localStorage.setItem('username', LoginResponse?.user?.name); 
+            localStorage.setItem('isSubscribe', LoginResponse?.user?.subscribedUser);
+            if(LoginResponse?.token && LoginResponse?.user?.subscribedUser === true) {
                 navigate('/dashboard');
+            } else {
+                navigate('/select-plan');
             }
+
+          
+
+            
         }
     }, [LoginResponse])
 
