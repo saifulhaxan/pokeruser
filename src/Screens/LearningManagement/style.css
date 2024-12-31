@@ -168,5 +168,12 @@
 }
 
 
+@media(min-width: 1024px) {
+    .addUser .inputWrapper {
+        width: 50%;
+    }
+}
+
+
 
 

@@ -14,6 +14,8 @@ import { SelectBox } from "../../Components/CustomSelect";
 import CustomModal from "../../Components/CustomModal";
 
 import './style.css'
+import { useGet, usePatch } from "../../Api";
+import ImageUpload from "../../Components/ImageUpload";
 
 const EditProfile = () => {
 
@@ -23,23 +25,84 @@ const EditProfile = () => {
     const [userNewData, setUserNewData] = useState({})
     const [optionData, setOptionData] = useState({});
     const [showModal, setShowModal] = useState(false);
+    const { ApiData: UsersData, loading: UsersLoading, error: UsersError, get: GetUsers } = useGet(`user/me`);
+    const { ApiData: StatusUpdateData, loading: StatusUpdateLoading, error: StatusUpdateError, patch: GetStatusUpdate } = usePatch(`user/update/profile`);
 
-    const handleClickPopup = ()=> {
-        setShowModal(true);
+    const keysToRemove = [
+        'id',
+        'email',
+        'subscribedUser',
+        'isActive',
+        'createdAt',
+        'updatedAt',
+        'deletedAt',
+        'stripeCustomer',
+    ];
+
+    // Remove specified keys
+
+
+
+
+    useEffect(() => {
+        if (UsersData) {
+            setUserData(UsersData);
+        }
+
+    }, [UsersData])
+
+    const handleClickPopup = () => {
+        keysToRemove.forEach(key => {
+            delete userData[key];
+        });
+
+        GetStatusUpdate(userData)
+
     }
+
+    useEffect(() => {
+        if (StatusUpdateData) {
+            setShowModal(true);
+            setTimeout(() => {
+                setShowModal(false);
+            }, 2000);
+        }
+    }, [StatusUpdateData])
+
+    const [imageId, setImageId] = useState(null);
+
+    // Callback function to handle the image ID received from the child component
+    const handleImageUpload = (response) => {
+        console.log('Image upload response:', response);
+        setUserData({
+            ...userData,
+            profilePicture: response?.imageUrl
+        })
+    };
 
     const handleClose = () => {
         setShowModal(false);
         navigate('/profile')
     }
 
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setUserData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+        console.log(userData)
+    };
+
+
+
+
 
     useEffect(() => {
 
         document.title = 'Poker City | Edit Profile';
-        setOptionData(country);
-        setUserData(currentUser);
-    },);
+        GetUsers()
+    }, []);
 
 
 
@@ -62,9 +125,9 @@ const EditProfile = () => {
                                     <div className="row mb-3">
                                         <div className="col-lg-4 order-2 order-lg-1 mb-3">
                                             <div className="profileImage">
-                                                <img src={userData.image} alt="User" />
-                                                <input type="file" accept="img/*" className="d-none" id="profileImage" onChange={(event) => { setUserNewData({ ...userNewData, image: event.target.value }) }} />
-                                                <label htmlFor="profileImage" className="imageUploadButton"><FontAwesomeIcon icon={faCamera} /></label>
+                                                <img src={userData?.profilePicture} alt="User" />
+                                                <ImageUpload onUpload={handleImageUpload} title="Edit" />
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -72,7 +135,7 @@ const EditProfile = () => {
                                         <div className="col-lg-6">
                                             <div className="row">
                                                 <div className="col-12 mb-3">
-                                                    <CustomInput label="Name" labelClass="mainLabel" required type="text" placeholder="Enter Name" inputClass="mainInput" onChange={(event) => { setUserNewData({ ...userNewData, name: event.target.value }) }} />
+                                                    <CustomInput label="Name" labelClass="mainLabel" required type="text" placeholder="Enter Name" inputClass="mainInput" onChange={handleChange} name="name" value={userData?.name} />
                                                 </div>
                                             </div>
                                             <div className="row">
@@ -83,25 +146,10 @@ const EditProfile = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col-12 mb-3">
-                                                    <CustomInput label="Phone Number" labelClass="mainLabel" required type="number" placeholder="Phone Number" inputClass="mainInput" onChange={(event) => { setUserNewData({ ...userNewData, name: event.target.value }) }} />
+                                                    <CustomInput label="Phone Number" labelClass="mainLabel" required type="number" placeholder="Phone Number" inputClass="mainInput" onChange={handleChange} name="phone" value={userData?.phone} />
                                                 </div>
                                             </div>
-                                            <div className="row">
-                                                <div className="col-md-6 mb-3">
-                                                    <SelectBox selectClass="mainInput" name="Select Country" label="Country" required option={optionData}
-                                                    onChange={(event) => { setUserNewData({ ...userNewData, country: event.target.value }) }}
-                                                    />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <SelectBox selectClass="mainInput" name="Select State" label="State" required option={optionData} />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                    <SelectBox selectClass="mainInput" name="Select City" label="City" required option={optionData} />
-                                                </div>
-                                                <div className="col-md-6 mb-3">
-                                                <CustomInput label="Postal/Zip Code*" labelClass="mainLabel" required type="number" placeholder="Enter Postal/Zip Code*" inputClass="mainInput" onChange={(event) => { setUserNewData({ ...userNewData, name: event.target.value }) }} />
-                                                </div>
-                                            </div>
+
                                         </div>
                                         <div className="col-12">
                                             <CustomButton type="button" variant="primaryButton" className="me-3 mb-2" text="Save" onClick={handleClickPopup} />

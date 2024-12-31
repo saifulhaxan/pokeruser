@@ -39,8 +39,14 @@ const AdminLogin = () => {
             localStorage.setItem('isSubscribe', LoginResponse?.user?.subscribedUser);
             if(LoginResponse?.token && LoginResponse?.user?.subscribedUser === true) {
                 navigate('/dashboard');
-            } else {
+            } 
+
+            if(LoginResponse?.token && LoginResponse?.user?.subscribedUser === false) {
                 navigate('/select-plan');
+            } 
+
+            if(!LoginResponse?.token) {
+                alert('Technical issue found')
             }
 
           
@@ -51,7 +57,7 @@ const AdminLogin = () => {
 
     useEffect(() => {
         if (LoginError) {
-            console.log(LoginError)
+           alert(LoginError)
         }
     }, [LoginError])
 

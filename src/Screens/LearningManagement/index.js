@@ -28,6 +28,9 @@ import CustomButton from "../../Components/CustomButton";
 
 import "./style.css";
 import { useDelete, useGet } from "../../Api";
+import VideoBox from "../../Components/videoBox";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const LectureManagement = () => {
   const [data, setData] = useState([]);
@@ -39,8 +42,11 @@ export const LectureManagement = () => {
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [inputValue, setInputValue] = useState('');
   const [delID, setDelID] = useState('');
+  const [categories, setCategories] = useState();
+  const [displayData, setDisplayData] = useState([]);
   const { ApiData: UseeListingData, loading: UseeListingLoading, error: UseeListingError, get: GetUseeListing } = useGet(`lectures`);
   const { ApiData: TagDeleteData, loading: TagDeleteLoading, error: TagDeleteError, del: GetTagDelete } = useDelete(`lectures/${delID}`);
+  const { ApiData: CategoryData, loading: CategoryLoading, error: CategoryError, get: GetCategory } = useGet(`category`);
 
 
   const navigate = useNavigate();
@@ -49,6 +55,12 @@ export const LectureManagement = () => {
     setCurrentPage(pageNumber);
   };
 
+
+  useEffect(() => {
+    if (CategoryData) {
+      setCategories(CategoryData)
+    }
+  }, [CategoryData])
   console.log();
 
   const hanldeRoute = () => {
@@ -86,82 +98,58 @@ export const LectureManagement = () => {
     setInputValue(e.target.value);
   }
 
-  const filterData = data.filter(item =>
-    item?.name?.toLowerCase().includes(inputValue.toLowerCase())
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filterData.slice(indexOfFirstItem, indexOfLastItem);
-
+  const filterData = data;
 
 
 
   useEffect(() => {
     document.title = 'Poker | Lecture Management';
     GetUseeListing()
-
+    GetCategory()
   }, []);
 
 
   useEffect(() => {
     if (UseeListingData) {
       setData(UseeListingData)
+      setDisplayData(UseeListingData);
     }
   }, [UseeListingData])
 
-  const maleHeaders = [
-    {
-      key: "id",
-      title: "S.No",
-    },
-    {
-      key: "username",
-      title: "Lecture Name",
-    },
-    {
-      key: "count",
-      title: "Category",
-    },
-    {
-      key: "count",
-      title: "Tag",
-    },
-    {
-      key: "count",
-      title: "Course Name",
-    },
-    {
-      key: "created_at",
-      title: "Created On",
-    },
-    {
-      key: "status",
-      title: "Status",
-    },
-    {
-      key: "action",
-      title: "Action",
-    },
-  ];
+  const [titleData, setTitle] = useState('All');
 
-  const [videoDurations, setVideoDurations] = useState({});
-
-  const handleMetadataLoaded = (index, duration) => {
-    setVideoDurations((prevDurations) => ({
-      ...prevDurations,
-      [index]: duration, // Store duration for each video by its index
-    }));
+  const handleApiResponse = (response) => {
+    // Handle the API response here (e.g., show a toast or update state)
+    console.log('API Response:', response?.message);
+    toast(response?.message, { toastId: 'unique-toast-id' });
   };
 
-  const handleMouseEnter = (e) => {
-    e.target.play();
+  const handleCategorySelect = (e) => {
+    const selectedCategoryId = e.target.value;
+  
+    if (selectedCategoryId == "undifiend") {
+      // User selected "Select Category", reset to show all data
+      GetUseeListing(); // Ensure this function resets the data appropriately
+      setTitle('All');
+    } else {
+      // User selected a specific category
+      const selectedCategoryName = e.target.options[e.target.selectedIndex].text;
+      setTitle(selectedCategoryName);
+  
+      const filteredData = data.filter(item =>
+        item.category.id === parseInt(selectedCategoryId, 10)
+      );
+  
+      setDisplayData(filteredData);
+    }
   };
+  
 
-  const handleMouseLeave = (e) => {
-    e.target.pause();
-    e.target.currentTime = 0; // Optional: Reset the video to the start
-  };
+
+
+
+
+
 
 
   return (
@@ -176,50 +164,31 @@ export const LectureManagement = () => {
                     <h2 className="mainTitle">Learning Center</h2>
                   </div>
                   <div className="col-md-6 mb-2">
-                    <div className="addUser">
+                    <div className="addUser flex-md-nowrap">
                       {/* <CustomButton text="Add New Lecture" variant='primaryButton' onClick={hanldeRoute} /> */}
-                      <CustomInput type="text" placeholder="Search Here..." value={inputValue} inputClass="mainInput" onChange={handleChange} />
+                      <CustomInput type="text" placeholder="Search Here..." value={inputValue} inputClass="mainInput flex-shrink-0" onChange={handleChange} />
+                      <select name="category" className="mainInput w-50" onChange={handleCategorySelect}>
+                        <option value="undifiend">Select Category</option>
+                        {categories && categories.map((item) => (
+                          <option key={item.id} value={item.id}>{item.title}</option>
+                        ))}
+                      </select>
+
                     </div>
                   </div>
                 </div>
                 <div className="row mb-3">
                   <div className="col-md-12">
-                    <h3 className="mainTitle">NLHE (No-Limit Hold'em)</h3>
+                    <h3 className="mainTitle">NLHE (No-Limit Hold'em) - {titleData ? titleData : 'All'} </h3>
                   </div>
-                  {data?.map((item, index) => (
+                  {displayData?.map((item, index) => (
                     <div className="col-xxl-3 col-xl-4 col-md-6 mb-5" key={index}>
-                      <div class="videoCard shadow h-100 rounded-4 overflow-hidden">
-                        <div className="videoBox">
-                          <video
-                            width="100%"
-                            src={item?.videoUpload}
-                            onMouseEnter={handleMouseEnter} 
-                            onMouseLeave={handleMouseLeave} 
-                            muted
-                            onLoadedMetadata={(e) =>
-                              handleMetadataLoaded(index, e.target.duration)
-                            }
-                          ></video>
-                        </div>
-                        <div className="videoBoxContent">
-                          <h3>{item?.name}</h3>
-                          <p>
-                            <FontAwesomeIcon icon={faClock} />{" "}
-                            {videoDurations[index]
-                              ? `${Math.floor(videoDurations[index] / 60)} min ${Math.floor(
-                                videoDurations[index] % 60
-                              )} sec`
-                              : "Loading..."}
-                          </p>
-                          <p>
-                            <FontAwesomeIcon icon={faStar} /> {item?.tags[0]?.title}
-                          </p>
-                          <div className="videoFooter">
-                            <Link to={`/lecture-management/lecture-details/${item?.id}`} className="buttonPrimary">View Lecture</Link>
-                          </div>
-                        </div>
-                        
-                      </div>
+                      <VideoBox
+                        key={item.id}
+                        item={item}
+                        index={index}
+                        onApiResponse={handleApiResponse}
+                      />
                     </div>
                   ))}
                 </div>
@@ -236,6 +205,7 @@ export const LectureManagement = () => {
 
 
         </div>
+        <ToastContainer />
       </DashboardLayout>
     </>
   );

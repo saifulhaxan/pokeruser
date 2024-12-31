@@ -23,6 +23,8 @@ import { useApi, useGet, usePost } from "../../Api";
 import "./style.css";
 import CustomInput from "../../Components/CustomInput";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import CustomModal from "../../Components/CustomModal";
+import { useNavigate } from "react-router";
 
 
 
@@ -36,6 +38,8 @@ export const Membership = () => {
     const { ApiData: UsersData, loading: UsersLoading, error: UsersError, get: GetUsers } = useGet(`user/me`);
     const { ApiData: ClientSecretData, post: GetClientSecret } = usePost(`user/create/subscription`);
     const LogoutData = localStorage.getItem('login');
+    const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
     const stripe = useStripe();
     const elements = useElements();
 
@@ -88,6 +92,12 @@ export const Membership = () => {
                     console.error("Payment confirmation error:", result.error.message);
                   } else if (result.paymentIntent) {
                     console.log("Payment successful:", result.paymentIntent);
+                    setShowModal(true)
+                    setTimeout(()=>{
+                        setShowModal(false)
+                        localStorage.removeItem('login');
+                        navigate('/')
+                    },1500)
                   }
                 })
                 .catch((error) => console.error("Error confirming payment:", error));
@@ -238,6 +248,7 @@ export const Membership = () => {
 
                     </div>
                 </section>
+                <CustomModal show={showModal} close={() => { setShowModal(false) }} success heading='Payment has been successfully done, please login your account.' />
             </DashboardLayout>
         </>
     );

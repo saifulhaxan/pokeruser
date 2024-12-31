@@ -18,16 +18,16 @@ import CustomInput from '../../Components/CustomInput';
 import { SelectBox } from "../../Components/CustomSelect";
 import CustomButton from "../../Components/CustomButton";
 import { CategoryList, DietaryList, MenuList } from "../../Components/CategoryList";
-import { usePost } from "../../Api";
+import { useGet, usePost } from "../../Api";
 import { useNavigate } from "react-router";
+import { userData } from "../../Config/Data";
 export const AddCourse = () => {
     const [unit, setUnit] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [formData, setFormData] = useState({
-        status: true
-    });
+    const [formData, setFormData] = useState();
     const navigate = useNavigate();
-    const { ApiData: AddCourseData, loading: AddCourseLoading, error: AddCourseError, post: GetAddCourse } = usePost(`courses`);
+    const { ApiData: CustomerSupportData, loading: CustomerSupportLoading, error: CustomerSupportError, post: GetCustomerSupport } = usePost(`customer-support`);
+    const { ApiData: UsersData, loading: UsersLoading, error: UsersError, get: GetUsers } = useGet(`user/me`);
 
 
 
@@ -37,30 +37,50 @@ export const AddCourse = () => {
             ...prevData,
             [name]: value,
         }));
-        console.log(formData)
+        console.log('formData', formData)
     };
 
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        GetAddCourse(formData);
-        if (formData?.title && formData?.description) {
+
+        if (formData?.name && formData?.message) {
+            GetCustomerSupport(formData);
         }
 
-      
+
     };
 
 
     useEffect(() => {
-        if (AddCourseData) {
+        if (CustomerSupportData) {
             setShowModal(true)
             setTimeout(() => {
                 setShowModal(false)
+                navigate('/dashboard');
             }, 3000)
-            navigate('/course-management');
+            
         }
-    }, [AddCourseData])
+    }, [CustomerSupportData])
+
+
+    useEffect(() => {
+        GetUsers()
+    }, [])
+
+
+    useEffect(() => {
+        if (UsersData) {
+            setFormData({
+                ...formData,
+                name: UsersData?.name,
+                email: UsersData?.email
+            })
+        }
+    }, [UsersData])
+
+
 
 
 
@@ -73,7 +93,7 @@ export const AddCourse = () => {
                         <div className="col-12 mb-2">
                             <h2 className="mainTitle">
                                 <BackButton />
-                                Add New Course
+                                Support Form
                             </h2>
                         </div>
                     </div>
@@ -85,31 +105,47 @@ export const AddCourse = () => {
                                         <div className="row">
                                             <div className="col-md-6 mb-4">
                                                 <CustomInput
-                                                    label='Add Course Name'
+                                                    label='Name'
                                                     required
                                                     id='name'
                                                     type='text'
-                                                    placeholder='Enter Course Name'
+                                                    placeholder='Enter  Name'
                                                     labelClass='mainLabel'
                                                     inputClass='mainInput'
                                                     name="title"
-                                                    value={formData.title}
+                                                    value={formData?.name}
+                                                    disabled
                                                     onChange={handleChange}
                                                 />
                                             </div>
-                                        
+                                            <div className="col-md-6 mb-4">
+                                                <CustomInput
+                                                    label='Email'
+                                                    required
+                                                    id='name'
+                                                    type='email'
+                                                    placeholder='Enter Email Name'
+                                                    labelClass='mainLabel'
+                                                    inputClass='mainInput'
+                                                    name="title"
+                                                    value={formData?.email}
+                                                    disabled
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+
                                             <div className="col-md-12 mb-4">
                                                 <div className="inputWrapper">
                                                     <div className="form-controls">
-                                                        <label htmlFor="">Description</label>
+                                                        <label htmlFor="">Message</label>
                                                         <textarea
-                                                            name="description"
+                                                            name="message"
                                                             required
                                                             className="form-control shadow border-0"
                                                             id=""
                                                             cols="30"
                                                             rows="10"
-                                                            value={formData.description}
+                                                            value={formData?.message}
                                                             onChange={handleChange}
                                                         >
                                                         </textarea>
@@ -127,7 +163,7 @@ export const AddCourse = () => {
                     </div>
                 </div>
 
-                <CustomModal show={showModal} close={() => { setShowModal(false) }} success heading='Course Added Successfully.' />
+                <CustomModal show={showModal} close={() => { setShowModal(false) }} success heading='Your Query has been successfully submitted to the admin.' />
 
             </DashboardLayout>
         </>

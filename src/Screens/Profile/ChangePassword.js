@@ -64,9 +64,7 @@ const ChangePassword = () => {
                                     <div className="col-12">
                                         <CustomButton type="button" variant="primaryButton" className="me-3 mb-2" text="Update" onClick={handleClickPopup} />
                                     </div>
-                                    <div className="col-12r">
-                                        <CustomButton type="button" className="me-3 mb-2 bg-transparent border-0" text="Cancel" />
-                                    </div>
+                                    
                                 </div>
                             </form>
                         </div>

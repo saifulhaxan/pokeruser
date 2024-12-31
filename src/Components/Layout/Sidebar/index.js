@@ -52,7 +52,7 @@ export const Sidebar = (props) => {
             </li>
 
             <li className="sidebar-li">
-              <Link className={`sideLink ${location.pathname.includes('#') ? 'active' : ''}`} to="#">
+              <Link className={`sideLink ${location.pathname.includes('/profile') ? 'active' : ''}`} to="/profile">
                 <span className="sideIcon">
                   <FontAwesomeIcon icon={faUsers} />
                 </span>
@@ -85,7 +85,7 @@ export const Sidebar = (props) => {
               </Link>
             </li>
             <li className="sidebar-li">
-              <Link className={`sideLink ${location.pathname.includes('#') ? 'active' : ''}`} to="#">
+              <Link className={`sideLink ${location.pathname.includes('/saved-videos') ? 'active' : ''}`} to="/saved-videos">
                 <span className="sideIcon">
                   <FontAwesomeIcon icon={faYenSign} />
                 </span>
@@ -101,7 +101,7 @@ export const Sidebar = (props) => {
               </Link>
             </li>
             <li className="sidebar-li">
-              <Link className={`sideLink ${location.pathname.includes('#') ? 'active' : ''}`} to="#" >
+              <Link className={`sideLink ${location.pathname.includes('/help-form') ? 'active' : ''}`} to="/help-form" >
                 <span>
                   <FontAwesomeIcon icon={faTableList} />
                 </span>

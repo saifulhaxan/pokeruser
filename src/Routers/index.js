@@ -48,7 +48,7 @@ import ChunkedFileUpload from "../Screens/demo/demo";
 // end
 
 
-
+import { SavedVideos } from "../Screens/SavedVideos";
 import Profile from "../Screens/Profile";
 import EditProfile from "../Screens/Profile/EditProfile";
 import ChangePassword from "../Screens/Profile/ChangePassword";
@@ -93,7 +93,7 @@ export default function AdminRouter() {
         <Route path="/tag-management" element={<ProtectedRoutes Components={TagManagement} />} />
 
         <Route path="/course-management" element={<ProtectedRoutes Components={CourseManagement} />} />
-        <Route path="/add-course" element={<ProtectedRoutes Components={AddCourse} />} />
+        <Route path="/help-form" element={<ProtectedRoutes Components={AddCourse} />} />
         <Route path="/edit-course/:id" element={<ProtectedRoutes Components={EditCourse} />} />
         <Route path="/course-management/course-details/:id" element={<ProtectedRoutes Components={CourseDetails} />} />
 
@@ -108,6 +108,7 @@ export default function AdminRouter() {
         <Route path="/promotion-management/promotion-details/:id" element={<ProtectedRoutes Components={PromotionDetails} />} />
 
         <Route path="/select-plan" element={<ProtectedRoutes Components={Membership} />} />
+        <Route path="/saved-videos" element={<ProtectedRoutes Components={SavedVideos} />} />
 
         <Route path="/profile" element={<ProtectedRoutes Components={Profile} />} />
         <Route path="/profile/edit-profile" element={<ProtectedRoutes Components={EditProfile} />} />

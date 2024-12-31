@@ -10,7 +10,7 @@
 
 
 .text-theme-primary {
-    color: #d71201;
+    color: var(--primaryColor);
 }
 
 

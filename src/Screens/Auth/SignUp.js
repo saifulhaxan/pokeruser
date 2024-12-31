@@ -7,10 +7,12 @@ import { AuthLayout } from '../../Components/Layout/AuthLayout';
 import CustomButton from '../../Components/CustomButton';
 import CustomInput from "../../Components/CustomInput"
 import { useAuth } from '../../Api';
+import CustomModal from '../../Components/CustomModal';
 
 
 const AdminLSignUp = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
     const { ApiData: LoginResponse, loading: LoginLoadning, error: LoginError, post: submitData } = useAuth('auth/signup');
 
     const [formData, setFormData] = useState({
@@ -35,7 +37,10 @@ const AdminLSignUp = () => {
     useEffect(() => {
         if (LoginResponse) {
             if (LoginResponse?.token) {
-                navigate('/');
+                setShowModal(true);
+                setTimeout(()=>{
+                    navigate('/');
+                },2000)
             }
         }
     }, [LoginResponse])
@@ -128,6 +133,7 @@ const AdminLSignUp = () => {
                         <CustomButton variant='primaryButton' text='Sign Up' type='submit' />
                     </div>
                 </form>
+                <CustomModal show={showModal} close={() => { setShowModal(false) }} success heading='User registered successfully, Please login your email and verify your account.' />
             </AuthLayout>
         </>
     )
