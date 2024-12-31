@@ -134,9 +134,11 @@ export const LectureManagement = () => {
   
 
   useEffect(() => {
-    if (refresh) {
+    if (refresh != "") {
       GetUseeListing();
     }
+
+    // setRefresh('')
 
   }, [refresh])
 

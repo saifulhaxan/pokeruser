@@ -68,14 +68,24 @@ export const Header = (props) => {
     setNotificationState(notifications)
   }, [])
 
+  const isSubscribe = localStorage.getItem('isSubscribe');
+
   return (
     <header>
       <Navbar className="customHeader" expand="md">
         <Container fluid>
-          <Link to={"/dashboard"} className="siteLogo order-2 order-lg-3 text-decoration-none">
-            {/* <h1>Food <span>Stadium</span></h1> */}
-            <img src={logo} className="mw-100" />
-          </Link>
+          {isSubscribe == "true" ? (
+            <Link to={"/dashboard"} className="siteLogo order-2 order-lg-3 text-decoration-none">
+              {/* <h1>Food <span>Stadium</span></h1> */}
+              <img src={logo} className="mw-100" />
+            </Link>
+          ) : (
+            <Link to={"/select-plan"} className="siteLogo order-2 order-lg-3 text-decoration-none">
+              {/* <h1>Food <span>Stadium</span></h1> */}
+              <img src={logo} className="mw-100" />
+            </Link>
+          )}
+
           <Navbar.Toggle className="order-4 order-lg-2 notButton">
             <FontAwesomeIcon className="bell-icon" icon={faEllipsisV} />
           </Navbar.Toggle>

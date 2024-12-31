@@ -41,7 +41,7 @@ export const Membership = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-      
+        
         if (!stripe || !elements) {
           console.error("Stripe or Elements not loaded");
           return;

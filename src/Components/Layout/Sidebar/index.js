@@ -36,7 +36,7 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 export const Sidebar = (props) => {
 
   const location = useLocation();
-  const isSubscribe = localStorage.getItem('isSubscribe')
+  const isSubscribe = localStorage.getItem('isSubscribe');
   return (
     <div className={`sidebar ${props.sideClass}`} id="sidebar">
       {

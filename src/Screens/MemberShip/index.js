@@ -45,73 +45,78 @@ export const Membership = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-      
+        document.querySelector('.loaderBox').classList.remove("d-none");
+
         if (!stripe || !elements) {
-          console.error("Stripe or Elements not loaded");
-          return;
+            console.error("Stripe or Elements not loaded");
+            return;
         }
-      
+
         const cardElement = elements.getElement(CardElement);
-      
+
         // Validate the card input
         if (!cardElement) {
-          console.error("CardElement is not loaded");
-          return;
+            console.error("CardElement is not loaded");
+            return;
         }
-      
+
         const { error: validationError } = await stripe.createPaymentMethod({
-          type: "card",
-          card: cardElement,
+            type: "card",
+            card: cardElement,
         });
-      
+
         if (validationError) {
-          console.error("Card validation error:", validationError.message);
-          return;
+            console.error("Card validation error:", validationError.message);
+            return;
         }
-      
+
         // Proceed to fetch client secret if card input is valid
         fetch("https://devapi.archcitylms.com/user/create/subscription", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${LogoutData}`, // Pass token in Authorization header
-          },
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${LogoutData}`, // Pass token in Authorization header
+            },
         })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data?.clientSecret) {
-              setClientSecret(data?.clientSecret);
-              // Confirm the payment with the fetched client secret
-              stripe.confirmCardPayment(data.clientSecret, {
-                payment_method: {
-                  card: cardElement,
-                },
-              })
-                .then((result) => {
-                  if (result.error) {
-                    console.error("Payment confirmation error:", result.error.message);
-                  } else if (result.paymentIntent) {
-                    console.log("Payment successful:", result.paymentIntent);
-                    setShowModal(true)
-                    setTimeout(()=>{
-                        setShowModal(false)
-                        localStorage.removeItem('login');
-                        navigate('/')
-                    },1500)
-                  }
-                })
-                .catch((error) => console.error("Error confirming payment:", error));
-            } else {
-              console.error("Client secret not found in response:", data);
-            }
-          })
-          .catch((error) => console.error("Error fetching client secret:", error));
-      };
-      
+            .then((response) => response.json())
+            .then((data) => {
+                if (data?.clientSecret) {
+                    document.querySelector('.loaderBox').classList.add("d-none");
+                    setClientSecret(data?.clientSecret);
+                    // Confirm the payment with the fetched client secret
+                    stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: {
+                            card: cardElement,
+                        },
+                    })
+                        .then((result) => {
+                            if (result.error) {
+                                document.querySelector('.loaderBox').classList.add("d-none");
+                                console.error("Payment confirmation error:", result.error.message);
+                            } else if (result.paymentIntent) {
+                                document.querySelector('.loaderBox').classList.add("d-none");
+                                console.log("Payment successful:", result.paymentIntent);
+                                setShowModal(true)
+                                setTimeout(() => {
+                                    setShowModal(false)
+                                    localStorage.removeItem('login');
+                                    navigate('/')
+                                }, 1500)
+                            }
+                        })
+                        .catch((error) => console.error("Error confirming payment:", error));
+                } else {
+                    document.querySelector('.loaderBox').classList.add("d-none");
+                    console.error("Client secret not found in response:", data);
+                }
+            })
+            .catch((error) => console.error("Error fetching client secret:", error));
+    };
 
 
 
-   
+
+
 
     useEffect(() => {
 

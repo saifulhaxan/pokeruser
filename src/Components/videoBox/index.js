@@ -6,7 +6,8 @@ import "./style.css";
 import { usePost } from '../../Api';
 import { ToastContainer, toast } from 'react-toastify';
 
-const VideoBox = ({ item, index, onApiResponse }) => {
+const VideoBox = ({ item, index, onApiResponse, refresh }) => {
+    // alert(refresh)
     // State to store video durations
     const [videoDurations, setVideoDurations] = useState({});
     const [formData, setFormData] = useState({});
@@ -100,7 +101,7 @@ const VideoBox = ({ item, index, onApiResponse }) => {
                     <button onClick={() => { handleHeartClick(item?.id) }} type='button' className='border-0 bg-transparent'>
                         <FontAwesomeIcon
                             icon={faHeart}
-                            className={`heartIcon ${item?.isFavourite ? 'filled' : 'empty'}`}
+                            className={`heartIcon ${item?.isFavourite || refresh ? 'filled' : 'empty'}`}
                         />
                     </button>
                 </div>

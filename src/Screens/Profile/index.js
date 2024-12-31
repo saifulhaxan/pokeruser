@@ -8,7 +8,7 @@ import CustomButton from "../../Components/CustomButton";
 
 import './style.css'
 import { useGet } from "../../Api";
-import { male1 } from "../../Assets/images";
+import { logo, male1 } from "../../Assets/images";
 
 
 const Profile = () => {
@@ -47,7 +47,7 @@ const Profile = () => {
                                 <div className="row mb-3">
                                     <div className="col-lg-4 order-2 order-lg-1 mb-3">
                                         <div className="profileImage">
-                                            <img src={userData?.profilePicture} alt="User" />
+                                        <img src={userData?.profilePicture === null ? logo : userData?.profilePicture } alt="User" />
                                         </div>
                                     </div>
                                 </div>

@@ -16,6 +16,7 @@ import CustomModal from "../../Components/CustomModal";
 import './style.css'
 import { useGet, usePatch } from "../../Api";
 import ImageUpload from "../../Components/ImageUpload";
+import { logo } from "../../Assets/images";
 
 const EditProfile = () => {
 
@@ -125,7 +126,7 @@ const EditProfile = () => {
                                     <div className="row mb-3">
                                         <div className="col-lg-4 order-2 order-lg-1 mb-3">
                                             <div className="profileImage">
-                                                <img src={userData?.profilePicture} alt="User" />
+                                                <img src={userData?.profilePicture === null ? logo : userData?.profilePicture } alt="User" />
                                                 <ImageUpload onUpload={handleImageUpload} title="Edit" />
                                                 
                                             </div>
@@ -146,7 +147,7 @@ const EditProfile = () => {
                                             </div>
                                             <div className="row">
                                                 <div className="col-12 mb-3">
-                                                    <CustomInput label="Phone Number" labelClass="mainLabel" required type="number" placeholder="Phone Number" inputClass="mainInput" onChange={handleChange} name="phone" value={userData?.phone} />
+                                                    <CustomInput label="Phone Number" labelClass="mainLabel" required type="text" placeholder="Phone Number" inputClass="mainInput" onChange={handleChange} name="phone" value={userData?.phone} />
                                                 </div>
                                             </div>
 
