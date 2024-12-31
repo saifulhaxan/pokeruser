@@ -31,7 +31,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "preview": "serve -s build -l 5111",
+    "preview": "serve -s build -l 5112",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
