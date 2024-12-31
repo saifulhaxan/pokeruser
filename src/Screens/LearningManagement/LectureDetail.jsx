@@ -123,9 +123,9 @@ export const LectureDetails = () => {
                             <div className="videoInfoDetail">
                                 <div className="row align-items-center">
                                     <div className="col-md-8">
-                                        <div class="progress-container">
-                                            <div class="progress-bar" id="progressBar">30%</div>
-                                        </div>
+                                        {/* <div class="progress-container">
+                                            <div class="progress-bar" id="progressBar"></div>
+                                        </div> */}
                                         <video width="100%" className="" controls src={details?.videoUpload}></video>
                                         <div className="row">
                                             <div className="col-md-12 mb-3">

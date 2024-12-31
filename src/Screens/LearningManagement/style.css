@@ -42,7 +42,7 @@
 
 .videoFooter a {
     display: inline-block;
-    background-color: #ffa500;
+    background-color: #017947;
     color: #fff;
     text-decoration: none;
     padding: 7px 30px;
@@ -52,7 +52,7 @@
 
 .videoFooter a:hover {
     display: inline-block;
-    background-color: #ffa600c2;
+    background-color: #149961;
     color: #fff;
     text-decoration: none;
     padding: 7px 30px;
@@ -70,7 +70,7 @@
 
 .progress-bar {
     height: 100%;
-    background: #ffa500;
+    background: #017947;
     width: 30%;
     text-align: center;
     line-height: 30px;
@@ -142,11 +142,11 @@
 }
 
 .drop-zone svg {
-    color: #ffa500 !important;
+    color: #017947 !important;
 }
 
 .drop-zone button {
-    background-color: #ffa500;
+    background-color: #017947;
     border: none;
 }
 

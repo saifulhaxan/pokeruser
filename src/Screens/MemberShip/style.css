@@ -67,7 +67,7 @@
 }
 
 .primaryThemeBtn {
-    background-color: #ffa500;
+    background-color: #017947;
     color: #fff;
     font-size: 20px;
     padding: 8px 8rem;
@@ -80,8 +80,8 @@
 
 .primaryThemeBtn:hover {
     background-color: #fff;
-    border: 1px solid #ffa500;
-    color: #ffa500;
+    border: 1px solid #017947;
+    color: #017947;
      text-decoration: none;
     transition: .5s;
 }
