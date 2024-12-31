@@ -118,15 +118,31 @@ export const LectureManagement = () => {
 
   const [titleData, setTitle] = useState('All');
 
+  const [refresh, setRefresh] = useState();
   const handleApiResponse = (response) => {
-    // Handle the API response here (e.g., show a toast or update state)
     console.log('API Response:', response?.message);
-    toast(response?.message, { toastId: 'unique-toast-id' });
+  
+    // Use a unique toast ID to prevent duplicate toasts
+    toast(response?.message, {
+      toastId: 'unique-toast-id',
+      autoClose: 1000, // Toast will auto-close after 1 second (1000 milliseconds)
+    });
+  
+    // Trigger a refresh if needed
+    setRefresh(response?.message);
   };
+  
+
+  useEffect(() => {
+    if (refresh) {
+      GetUseeListing();
+    }
+
+  }, [refresh])
 
   const handleCategorySelect = (e) => {
     const selectedCategoryId = e.target.value;
-  
+
     if (selectedCategoryId == "undifiend") {
       // User selected "Select Category", reset to show all data
       GetUseeListing(); // Ensure this function resets the data appropriately
@@ -135,15 +151,15 @@ export const LectureManagement = () => {
       // User selected a specific category
       const selectedCategoryName = e.target.options[e.target.selectedIndex].text;
       setTitle(selectedCategoryName);
-  
+
       const filteredData = data.filter(item =>
         item.category.id === parseInt(selectedCategoryId, 10)
       );
-  
+
       setDisplayData(filteredData);
     }
   };
-  
+
 
 
 

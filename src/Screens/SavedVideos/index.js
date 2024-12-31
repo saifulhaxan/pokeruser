@@ -72,10 +72,14 @@ export const SavedVideos = () => {
     }, [saveVideo])
 
     const handleApiResponse = (response) => {
-        // Handle the API response here (e.g., show a toast or update state)
         console.log('API Response:', response?.message);
-        toast(response?.message);
-    };
+    
+        // Use a unique toast ID to prevent duplicate toasts
+        toast(response?.message, { toastId: 'unique-toast-id' });
+    
+        // Refresh the saved videos
+        GetSavedVideos();
+      };
 
 
 

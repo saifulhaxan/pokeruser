@@ -36,7 +36,7 @@ const AdminLSignUp = () => {
 
     useEffect(() => {
         if (LoginResponse) {
-            if (LoginResponse?.token) {
+            if (LoginResponse) {
                 setShowModal(true);
                 setTimeout(()=>{
                     navigate('/');
