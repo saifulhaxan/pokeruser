@@ -112,6 +112,7 @@ export const SavedVideos = () => {
                                                     <VideoBox
                                                         key={item?.id}
                                                         item={item}
+                                                        list={saveVideo?.favoriteLectures}
                                                         index={index}
                                                         onApiResponse={handleApiResponse}
                                                     />

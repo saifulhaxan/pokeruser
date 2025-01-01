@@ -128,19 +128,17 @@ export const LectureManagement = () => {
       autoClose: 1000, // Toast will auto-close after 1 second (1000 milliseconds)
     });
   
-    // Trigger a refresh if needed
-    setRefresh(response?.message);
+
   };
   
 
-  useEffect(() => {
-    if (refresh != "") {
-      GetUseeListing();
-    }
+  // useEffect(() => {
+  //   if (refresh != "") {
+  //     GetUseeListing();
+  //   }
 
-    // setRefresh('')
 
-  }, [refresh])
+  // }, [refresh])
 
   const handleCategorySelect = (e) => {
     const selectedCategoryId = e.target.value;
@@ -162,6 +160,7 @@ export const LectureManagement = () => {
     }
   };
 
+  console.log('dd', displayData)
 
 
 
@@ -204,6 +203,7 @@ export const LectureManagement = () => {
                       <VideoBox
                         key={item.id}
                         item={item}
+                        list={[...displayData]}
                         index={index}
                         onApiResponse={handleApiResponse}
                       />
