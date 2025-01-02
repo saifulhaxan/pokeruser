@@ -30,7 +30,8 @@ export const useAuth = (url, initialData = null) => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
       }
 
       const result = await response.json();
@@ -81,7 +82,8 @@ export const usePost = (url, initialData = null) => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
       }
 
       const result = await response.json();
@@ -132,7 +134,8 @@ export const usePostForm = (url, initialData = null) => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
       }
 
       const result = await response.json();
@@ -184,7 +187,8 @@ export const usePatch = (url, initialData = null) => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
       }
 
       const result = await response.json();
@@ -236,7 +240,8 @@ export const usePatchForm = (url, initialData = null) => {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
       }
 
       const result = await response.json();
@@ -286,7 +291,8 @@ export const useGet = (url, initialData = null, idData = '') => {
         },
       });
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
       }
       const result = await response.json();
       setData(result);
@@ -332,7 +338,8 @@ export const useDelete = (url, initialData = null, idData = '') => {
         },
       });
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
       }
       const result = await response.json();
       setData(result);

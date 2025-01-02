@@ -9,7 +9,7 @@ import CustomButton from '../../Components/CustomButton';
 import CustomModal from '../../Components/CustomModal';
 
 import "./style.css";
-import { useAuth } from '../../Api';
+import { useAuth, usePatch } from '../../Api';
 import { toast } from 'react-toastify';
 
 const ForgetPassword3 = () => {
@@ -22,7 +22,7 @@ const ForgetPassword3 = () => {
         token: paramValue
     })
 
-    const { ApiData: ChangePasswordResponse, loading: ChangePasswordLoadning, error: ChangePasswordError, post: submitData } = useAuth('auth/reset-password');
+    const { ApiData: ChangePasswordResponse, loading: ChangePasswordLoadning, error: ChangePasswordError, patch: submitData } = usePatch('auth/reset-password');
 
     useEffect(() => {
         document.title = 'Poker City | Password Recovery';

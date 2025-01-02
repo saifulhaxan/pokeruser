@@ -28,9 +28,11 @@ const ForgetPassword = () => {
     }
 
     useEffect(()=>{
-        if(ForgotResponse) {
+        if(ForgotResponse && ForgotResponse?.status != 404) {
             toast(ForgotResponse?.message);
-            navigate('/forget-password3')
+            // navigate('/forget-password3');
+        } else {
+            toast(ForgotResponse?.message);
         }
     },[ForgotResponse])
 
@@ -38,6 +40,7 @@ const ForgetPassword = () => {
     useEffect(()=>{
         if(ForgotError) {
             toast(ForgotError?.message);
+            return false;
         }
     },[ForgotError])
 

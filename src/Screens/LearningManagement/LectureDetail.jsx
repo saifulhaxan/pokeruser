@@ -174,7 +174,7 @@ export const LectureDetails = () => {
                                             <FontAwesomeIcon icon={faStar} /> {item?.tags[0]?.title}
                                         </p>
                                         <div className="videoFooter">
-                                            <Link to={`/lecture-management/lecture-details/${item?.id}`} className="buttonPrimary">View Lecture</Link>
+                                            <Link to={`/lecture-management/lecture-details/${item?.id}`} className="buttonPrimary">View Course</Link>
                                         </div>
                                     </div>
 

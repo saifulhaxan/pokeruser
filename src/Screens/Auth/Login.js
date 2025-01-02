@@ -7,6 +7,7 @@ import { AuthLayout } from '../../Components/Layout/AuthLayout';
 import CustomButton from '../../Components/CustomButton';
 import CustomInput from "../../Components/CustomInput"
 import { useAuth } from '../../Api';
+import { toast } from 'react-toastify';
 
 
 const AdminLogin = () => {
@@ -34,30 +35,34 @@ const AdminLogin = () => {
 
     useEffect(() => {
         if (LoginResponse) {
+            if (LoginResponse?.token) {
+                toast('Login Successfuly!');
+            }
             localStorage.setItem('login', LoginResponse?.token);
-            localStorage.setItem('username', LoginResponse?.user?.name); 
+            localStorage.setItem('username', LoginResponse?.user?.name);
             localStorage.setItem('isSubscribe', LoginResponse?.user?.subscribedUser);
-            if(LoginResponse?.token && LoginResponse?.user?.subscribedUser === true) {
-                navigate('/dashboard');
-            } 
-
-            if(LoginResponse?.token && LoginResponse?.user?.subscribedUser === false) {
-                navigate('/select-plan');
-            } 
-
-            if(!LoginResponse?.token) {
-                alert('Technical issue found')
+            if (LoginResponse?.token && LoginResponse?.user?.subscribedUser === true) {
+                setTimeout(() => {
+                    navigate('/dashboard');
+                }, 1500)
             }
 
-          
+            if (LoginResponse?.token && LoginResponse?.user?.subscribedUser === false) {
+                setTimeout(() => {
+                    navigate('/select-plan');
+                }, 1500)
 
-            
+            }
+
+
+
+
         }
     }, [LoginResponse])
 
     useEffect(() => {
         if (LoginError) {
-           alert(LoginError)
+            toast(LoginError?.message)
         }
     }, [LoginError])
 

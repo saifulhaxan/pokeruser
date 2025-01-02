@@ -132,14 +132,6 @@ export const LectureManagement = () => {
   };
   
 
-  // useEffect(() => {
-  //   if (refresh != "") {
-  //     GetUseeListing();
-  //   }
-
-
-  // }, [refresh])
-
   const handleCategorySelect = (e) => {
     const selectedCategoryId = e.target.value;
 
@@ -178,7 +170,7 @@ export const LectureManagement = () => {
               <div className="dashCard">
                 <div className="row mb-3 justify-content-between">
                   <div className="col-md-6 mb-2">
-                    <h2 className="mainTitle">Learning Center</h2>
+                    <h2 className="mainTitle">Modules</h2>
                   </div>
                   <div className="col-md-6 mb-2">
                     <div className="addUser flex-md-nowrap">
