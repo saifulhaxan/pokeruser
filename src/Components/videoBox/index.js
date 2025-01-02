@@ -6,13 +6,17 @@ import "./style.css";
 import { usePost } from '../../Api';
 import { ToastContainer, toast } from 'react-toastify';
 
-const VideoBox = ({ item, index, onApiResponse, refresh }) => {
+const VideoBox = ({ item, index, onApiResponse, list }) => {
     // alert(refresh)
     // State to store video durations
     const [videoDurations, setVideoDurations] = useState({});
     const [formData, setFormData] = useState({});
     // State to handle the "liked" status (wishlist)
     const [isLiked, setIsLiked] = useState(false);
+    const [wishID, setWhistID] = useState(
+        list?.filter((item) => item?.isFavourite === true)?.map((item) => item.id)
+    );
+
     const { ApiData: AddSavedData, loading: AddSavedLoading, error: AddSavedError, post: GetAddSaved } = usePost(`user/create-favorite`);
 
 
@@ -37,12 +41,29 @@ const VideoBox = ({ item, index, onApiResponse, refresh }) => {
 
     // Handle heart icon click (toggle wishlist)
     const handleHeartClick = (id) => {
+        setWhistID((prev) => {
+            if (prev.includes(id)) {
+                // Remove the ID if it already exists
+                return prev.filter((item) => item !== id);
+            } else {
+                // Add the ID if it doesn't exist
+                return [...prev, id];
+            }
+        });
+
         setFormData({
             ...formData,
             lectureId: id
         })
         // setIsLiked((prevLiked) => !prevLiked); // Toggle the liked state
     };
+
+
+    useEffect(()=>{
+        console.log('wishid', wishID)
+    },[wishID])
+
+
 
     useEffect(() => {
         if (formData?.lectureId) {
@@ -101,7 +122,7 @@ const VideoBox = ({ item, index, onApiResponse, refresh }) => {
                     <button onClick={() => { handleHeartClick(item?.id) }} type='button' className='border-0 bg-transparent'>
                         <FontAwesomeIcon
                             icon={faHeart}
-                            className={`heartIcon ${item?.isFavourite || refresh ? 'filled' : 'empty'}`}
+                            className={`heartIcon ${wishID.includes(item?.id) ? 'filled' : 'empty'}`}
                         />
                     </button>
                 </div>

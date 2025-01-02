@@ -249,6 +249,7 @@ export const Dashboard = () => {
                           <VideoBox
                             key={item?.id}
                             item={item}
+                            list={saveVideo?.favoriteLectures}
                             index={index}
                             onApiResponse={handleApiResponse}
                           />
