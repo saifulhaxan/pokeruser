@@ -45,6 +45,7 @@ import { AddLecture } from "../Screens/LearningManagement/AddLecture";
 import { EditLecture } from "../Screens/LearningManagement/EditLecture";
 import { LectureDetails } from "../Screens/LearningManagement/LectureDetail";
 import ChunkedFileUpload from "../Screens/demo/demo";
+import { ContentLibrary } from "../Screens/ContentLibrary";
 // end
 
 
@@ -101,6 +102,8 @@ export default function AdminRouter() {
         <Route path="/add-lecture" element={<ProtectedRoutes Components={AddLecture} />} />
         <Route path="/edit-lecture/:id" element={<ProtectedRoutes Components={EditLecture} />} />
         <Route path="/lecture-management/lecture-details/:id" element={<ProtectedRoutes Components={LectureDetails} />} />
+
+        <Route path="/content-library" element={<ProtectedRoutes Components={ContentLibrary} />} />
 
         <Route path="/promotion-management" element={<ProtectedRoutes Components={PromotionManagement} />} />
         <Route path="/add-promotion" element={<ProtectedRoutes Components={AddPromotion} />} />

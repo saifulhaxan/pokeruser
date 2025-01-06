@@ -77,7 +77,7 @@ export const Sidebar = (props) => {
               </Link>
             </li>
             <li className="sidebar-li">
-              <Link className={`sideLink ${location.pathname.includes('#') ? 'active' : ''}`} to="#">
+              <Link className={`sideLink ${location.pathname.includes('content-library') ? 'active' : ''}`} to="/content-library">
                 <span className="sideIcon">
                   <FontAwesomeIcon icon={faMoneyBill} />
                 </span>

@@ -32,7 +32,7 @@ import VideoBox from "../../Components/videoBox";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-export const LectureManagement = () => {
+export const ContentLibrary = () => {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -103,7 +103,7 @@ export const LectureManagement = () => {
 
 
   useEffect(() => {
-    document.title = 'Poker | Lecture Management';
+    document.title = 'Poker | Content Library';
     GetUseeListing()
     GetCategory()
   }, []);
@@ -121,16 +121,16 @@ export const LectureManagement = () => {
   const [refresh, setRefresh] = useState();
   const handleApiResponse = (response) => {
     console.log('API Response:', response?.message);
-
+  
     // Use a unique toast ID to prevent duplicate toasts
     toast(response?.message, {
       toastId: 'unique-toast-id',
       autoClose: 1000, // Toast will auto-close after 1 second (1000 milliseconds)
     });
-
+  
 
   };
-
+  
 
   const handleCategorySelect = (e) => {
     const selectedCategoryId = e.target.value;
@@ -170,7 +170,7 @@ export const LectureManagement = () => {
               <div className="dashCard">
                 <div className="row mb-3 justify-content-between">
                   <div className="col-md-6 mb-2">
-                    <h2 className="mainTitle">Modules</h2>
+                    <h2 className="mainTitle">Content Library</h2>
                   </div>
                   <div className="col-md-6 mb-2">
                     <div className="addUser flex-md-nowrap">
@@ -190,20 +190,17 @@ export const LectureManagement = () => {
                   <div className="col-md-12">
                     <h3 className="mainTitle">NLHE (No-Limit Hold'em) - {titleData ? titleData : 'All'} </h3>
                   </div>
-                  {displayData?.map((item, index) =>
-                    item?.category?.id == "9" && (
-                      <div className="col-xxl-3 col-xl-4 col-md-6 mb-5" key={index}>
-                        <VideoBox
-                          key={item.id}
-                          item={item}
-                          list={[...displayData]}
-                          index={index}
-                          onApiResponse={handleApiResponse}
-                        />
-                      </div>
-                    )
-                  )}
-
+                  {displayData?.map((item, index) => (
+                    <div className="col-xxl-3 col-xl-4 col-md-6 mb-5" key={index}>
+                      <VideoBox
+                        key={item.id}
+                        item={item}
+                        list={[...displayData]}
+                        index={index}
+                        onApiResponse={handleApiResponse}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
