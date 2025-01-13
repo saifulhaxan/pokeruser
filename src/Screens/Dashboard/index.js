@@ -35,7 +35,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
 
-    document.title = 'Poker Admin | Dashboard';
+    document.title = 'Poker User | Dashboard';
     GetDashboardStats()
     GetSavedVideos()
   }, []);

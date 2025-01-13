@@ -26,6 +26,24 @@
     justify-content: center;
 }
 
+.catgoryMeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.catgoryMeta .progress-container {
+    width: 238px;
+    height: 14px;
+    background: #dcdcd6;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    font-size: 11px;
+}
+
 .videoCard {
     position: relative;
+    min-height: 400px;
 }

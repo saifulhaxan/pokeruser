@@ -90,6 +90,34 @@
     border-radius: 4px;
 }
 
+.subTitle {
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 2px solid #017947;
+    display: inline-block;
+    margin: 15px 0;
+}
+
+button.slick-arrow::before {
+    color: #017947;
+    font-size: 23px;
+}
+
+.slick-track {
+    /* width: 100% !important; */
+    display: flex !important;
+    justify-content: start;
+}
+
+.slick-track > div {
+    flex-shrink: 0;
+    margin: 0 !important;
+}
+
+.slick-track {
+    margin: 0 !important;
+}
+
 .videoUploadBox svg {
     font-size: 40px;
     color: #6c6c6c;

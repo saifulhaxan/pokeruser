@@ -10,7 +10,7 @@
     * - Author          : Saif
     * - Modification    : 
 **/
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { DashboardLayout } from "../../Components/Layout/DashboardLayout";
 import BackButton from "../../Components/BackButton";
@@ -20,6 +20,7 @@ import { useGet, usePatch } from "../../Api";
 import FormatDateTime from "../../Components/DateFormate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faStar } from "@fortawesome/free-solid-svg-icons";
+import io from 'socket.io-client';
 
 export const LectureDetails = () => {
 
@@ -89,6 +90,65 @@ export const LectureDetails = () => {
 
     const [videoDurations, setVideoDurations] = useState({});
 
+    const [socket, setSocket] = useState(null);
+    const [watchedSeconds, setWatchedSeconds] = useState(0);
+    const videoRef = useRef(null);
+    const token = localStorage.getItem('login');
+
+    useEffect(() => {
+        // Initialize socket connection
+        const newSocket = io('https://devapi.archcitylms.com/socket.io', {
+            auth: { token },
+            transports: ["websocket"]
+        });
+
+        setSocket(newSocket);
+        console.log(socket)
+
+        // Handle connection events
+        newSocket.on('connect', () => {
+            console.log('Connected to WebSocket');
+        });
+
+        newSocket.on('disconnect', () => {
+            console.log('Disconnected from WebSocket');
+        });
+
+        newSocket.on('progress-saved', (response) => {
+            console.log('Progress saved:', response);
+        });
+
+        return () => {
+            // Cleanup socket on component unmount
+            newSocket.disconnect();
+        };
+    }, []);
+
+    const handlePlay = () => {
+        console.log('Video playing');
+        // socket?.emit('playEvent', { videoId: details?.id });
+    };
+
+    const handlePause = () => {
+        const payload = {
+            videoId: parseInt(id),
+            watchedSeconds: watchedSeconds
+        };
+        console.log('Emitting pauseEvent:', payload); // Log the payload
+        socket?.emit('pauseEvent', payload);
+
+        socket.on('progress-saved', (response) => {
+            console.log('Response from server:', response); // Log server response
+        });
+    };
+
+
+
+    const handleTimeUpdate = () => {
+        const currentTime = videoRef.current.currentTime;
+        setWatchedSeconds(Math.floor(currentTime));
+    };
+
     const handleMetadataLoaded = (index, duration) => {
         setVideoDurations((prevDurations) => ({
             ...prevDurations,
@@ -104,6 +164,20 @@ export const LectureDetails = () => {
         e.target.pause();
         e.target.currentTime = 0; // Optional: Reset the video to the start
     };
+
+
+    const calculateProgress = (watchedSeconds, lectureLength) => {
+        if (!lectureLength || watchedSeconds == null) return 0;
+        return (watchedSeconds / lectureLength) * 100;
+    };
+
+    const progress = calculateProgress(details?.lectureProgress?.[0]?.watchedSeconds, details?.lectureLength);
+
+    useEffect(() => {
+        if (UseeListingData) {
+            
+        }
+    }, [UseeListingData])
 
 
     return (
@@ -123,10 +197,19 @@ export const LectureDetails = () => {
                             <div className="videoInfoDetail">
                                 <div className="row align-items-center">
                                     <div className="col-md-8">
-                                        {/* <div class="progress-container">
-                                            <div class="progress-bar" id="progressBar"></div>
-                                        </div> */}
-                                        <video width="100%" className="" controls src={details?.videoUpload}></video>
+                                        <div className="progress-container">
+                                            <div className="progress-bar" style={{ width: `${progress}%` }}>  {`${Math.floor(progress)}%`}</div>
+                                        </div>
+                                        <video width="100%" className=""
+                                            ref={videoRef}
+                                            controls
+                                            src={details?.videoUpload}
+                                            onPlay={handlePlay}
+                                            onPause={handlePause}
+                                            onTimeUpdate={handleTimeUpdate}
+
+                                        ></video>
+
                                         <div className="row">
                                             <div className="col-md-12 mb-3">
                                                 <h3 className="">{details?.name}</h3>

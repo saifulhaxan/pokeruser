@@ -60,7 +60,7 @@ export const AddCourse = () => {
                 setShowModal(false)
                 navigate('/dashboard');
             }, 3000)
-            
+
         }
     }, [CustomerSupportData])
 
@@ -80,7 +80,15 @@ export const AddCourse = () => {
         }
     }, [UsersData])
 
-
+    const issueList = [
+        { code: "Account issues", name: "Account issues" },
+        { code: "Website Navigation Help", name: "Website Navigation Help" },
+        { code: "Login/Logout Issues", name: "Login/Logout Issues" },
+        { code: "Profile Settings", name: "Profile Settings" },
+        { code: "Payment Questions", name: "Payment Questions" },
+        { code: "None of these", name: "None of these" }
+      ];
+      
 
 
 
@@ -130,6 +138,19 @@ export const AddCourse = () => {
                                                     name="title"
                                                     value={formData?.email}
                                                     disabled
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+
+                                            <div className="col-md-6 mb-4">
+                                                <SelectBox
+                                                    selectClass="mainInput"
+                                                    name="title"
+                                                    label="Select Title"
+                                                    placeholder="Select Title"
+                                                    required
+                                                    // value={formData?.title || ""}
+                                                    option={issueList}
                                                     onChange={handleChange}
                                                 />
                                             </div>

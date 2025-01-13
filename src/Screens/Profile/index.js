@@ -59,7 +59,7 @@ const Profile = () => {
                                                 <p className="secondaryText">{userData?.name}</p>
                                             </div>
                                             <div className="col-lg-6 mb-3">
-                                                <h4 className="secondaryLabel">Dob</h4>
+                                                <h4 className="secondaryLabel">DOB</h4>
                                                 <p className="secondaryText">{userData.dob}</p>
                                             </div>
                                             <div className="col-lg-6 mb-3">
