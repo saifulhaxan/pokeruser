@@ -132,7 +132,7 @@ export const LectureDetails = () => {
     const handlePause = () => {
         const payload = {
             videoId: parseInt(id),
-            watchedSeconds: watchedSeconds
+            watchedSeconds: parseInt(watchedSeconds)
         };
         console.log('Emitting pauseEvent:', payload); // Log the payload
         socket?.emit('pauseEvent', payload);
