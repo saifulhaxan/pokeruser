@@ -291,7 +291,7 @@ export const LectureManagement = () => {
                         </div>
 
                         <Slider {...sliderSettings}>
-                          {categoryData?.lectures
+                          {categoryData
                             ?.sort((a, b) => a.order - b.order) // Sort lectures by the 'order' key
                             .map((item, idx) => (
                               <div className="p-2" key={item.id || idx}>

@@ -31,6 +31,7 @@ export const Dashboard = () => {
 
   const { ApiData: DashboardStatsData, loading: DashboardStatsLoading, error: DashboardStatsError, get: GetDashboardStats } = useGet(`user/dashboard`);
   const { ApiData: SavedVideosData, loading: SavedVideosLoading, error: SavedVideosError, get: GetSavedVideos } = useGet(`user/get-favorites`);
+  const { ApiData: ProgressData, loading: ProgressLoading, error: ProgressError, get: GetProgress } = useGet(`category/all-progress`);
 
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export const Dashboard = () => {
     document.title = 'Poker User | Dashboard';
     GetDashboardStats()
     GetSavedVideos()
+    GetProgress()
   }, []);
 
 
