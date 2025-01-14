@@ -27,7 +27,8 @@ import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
   const [data, setData] = useState('');
-  const [saveVideo, setSave] = useState([{}]);
+  const [saveVideo, setSave] = useState([]);
+  const [progressBar, setProgressBar] = useState();
 
   const { ApiData: DashboardStatsData, loading: DashboardStatsLoading, error: DashboardStatsError, get: GetDashboardStats } = useGet(`user/dashboard`);
   const { ApiData: SavedVideosData, loading: SavedVideosLoading, error: SavedVideosError, get: GetSavedVideos } = useGet(`user/get-favorites`);
@@ -42,6 +43,12 @@ export const Dashboard = () => {
     GetProgress()
   }, []);
 
+
+  useEffect(() => {
+    if (ProgressData) {
+      setProgressBar(ProgressData);
+    }
+  }, [ProgressData])
 
   useEffect(() => {
     if (SavedVideosData) {
@@ -81,7 +88,7 @@ export const Dashboard = () => {
             <div className="col-12">
               <div className="dashCard">
                 <div className="row">
-                  <div className="col-xl-4 col-md-6 stats">
+                  <div className="col-xl-6 col-md-6 mb-5 stats">
                     <div className="statsCard">
                       <div className="statsContent">
                         <div className="statsData">
@@ -103,29 +110,7 @@ export const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-xl-4 col-md-6 stats">
-                    <div className="statsCard">
-                      <div className="statsContent">
-                        <div className="statsData">
-                          {/* {receivedLoading ? 'Loading... ' : <h3 className="statsNumber">{`$ ${recived?.totalSumReceivedAmount}`}</h3>} */}
-                          <h3 className="statsNumber">{data?.totalProgress?.progress}%</h3>
-                          <p className="statsText">Total Lecture Progress</p>
-                        </div>
-                      </div>
-                      <div className="statsChange">
-                        <p>
-                          <FontAwesomeIcon
-                            icon={faArrowCircleDown}
-                            className="me-2 redColor"
-                          />
-
-                          100 %
-                        </p>
-                        <p>Since last week</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-xl-4 col-md-6 stats">
+                  <div className="col-xl-6 col-md-6 mb-5 stats">
                     <div className="statsCard">
                       <div className="statsContent">
                         <div className="statsData">
@@ -149,85 +134,39 @@ export const Dashboard = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="col-md-12">
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <div className="couseTitle">
+                          <h3>NLHE (No-Limit Hold'em)</h3>
+                        </div>
+                        <div className="dataProgress">
+                          {
+                            progressBar?.map((item, index) => (
+                              <div className="catData">
+                                <div className="catTitle">
+                                  <h4>{item?.title}</h4>
+                                </div>
+                                <div className="progress-container">
+                                  <div
+                                    className="progress-bar"
+                                    style={{ width: `${item?.progress[0]?.progressPercentage || 0}%` }}
+                                  >
+                                    {`${Math.floor(item?.progress[0]?.progressPercentage || 0)}%`}
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          {/* <div className="row mb-3">
-            <div className="col-12">
-              <div className="dashCard">
-                <div className="row">
-                  <div className="col-md-6 mb-4">
-                    <div className="titleArea mb-4">
-                      <h3 className="mainTitle">Recently Login</h3>
-                    </div>
-                    <div className="dashData">
-                      <div className="userBox">
-                        <div className="userImage">
-                          <img src={male1} alt="Jhon" />
-                        </div>
-                        <div className="userName">
-                          <h5>Jhon Mikal</h5>
-                          <p>Last Login: 7:32 AM</p>
-                        </div>
-                      </div>
-                      <div className="userBox">
-                        <div className="userImage">
-                          <img src={male3} alt="Jhon" />
-                        </div>
-                        <div className="userName">
-                          <h5>Jhon Mikal</h5>
-                          <p>Last Login: 7:32 AM</p>
-                        </div>
-                      </div>
-                      <div className="userBox">
-                        <div className="userImage">
-                          <img src={male2} alt="Jhon" />
-                        </div>
-                        <div className="userName">
-                          <h5>Jhon Mikal</h5>
-                          <p>Last Login: 7:32 AM</p>
-                        </div>
-                      </div>
-                      <div className="userBox">
-                        <div className="userImage">
-                          <img src={female1} alt="Jhon" />
-                        </div>
-                        <div className="userName">
-                          <h5>Jhon Mikal</h5>
-                          <p>Last Login: 7:32 AM</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6 mb-4">
-                    <div className="titleArea mb-4">
-                      <h3 className="mainTitle">Recently Registered</h3>
-                    </div>
-                    <div className="dashData">
-                      {
-                        data && data?.map((item, index) => (
 
-                          <div className="userBox" key={index}>
-                            <div className="userImage">
-                              <img src={male1} alt="Jhon" />
-                            </div>
-                            <div className="userName">
-                              <div className="info">
-                                <h5 className="text-capitalize">{item?.name}</h5>
-                                <small>{item?.email}</small>
-                              </div>
-                              <p>{item?.createdAt}</p>
-                            </div>
-                          </div>
-                        ))
-                      }
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
 
           <div className="row mb-3">
             <div className="col-12">

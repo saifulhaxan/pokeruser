@@ -283,21 +283,21 @@ export const LectureManagement = () => {
                           <div className="progress-container">
                             <div
                               className="progress-bar"
-                              style={{ width: `${categoryData.progress?.progressPercentage || 0}%` }}
+                              style={{ width: `${categoryData.progress[0]?.progressPercentage || 0}%` }}
                             >
-                              {`${Math.floor(categoryData.progress?.progressPercentage || 0)}%`}
+                              {`${Math.floor(categoryData.progress[0]?.progressPercentage || 0)}%`}
                             </div>
                           </div>
                         </div>
 
                         <Slider {...sliderSettings}>
-                          {categoryData
+                          {categoryData?.lectures
                             ?.sort((a, b) => a.order - b.order) // Sort lectures by the 'order' key
                             .map((item, idx) => (
                               <div className="p-2" key={item.id || idx}>
                                 <VideoBox
                                   item={item}
-                                  list={[...displayData]}
+                                  list={[...categoryData?.lectures]}
                                   index={idx}
                                   onApiResponse={handleApiResponse}
                                 />

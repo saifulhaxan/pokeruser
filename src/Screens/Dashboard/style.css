@@ -91,6 +91,52 @@
     font-size: 12px;
 }
 
+.catData {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.catData > div {
+    flex-shrink: 0;
+}
+
+.catData > div:last-child {
+    width: 75%;
+}
+
+.catTitle h4 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.catData {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.catData > div {
+    flex-shrink: 0;
+}
+
+.catData > div:last-child {
+    width: 75%;
+}
+
+.catTitle h4 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.couseTitle h3 {
+    display: inline-block;
+    border-bottom: 2px solid #017947;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
 @media screen and (max-width: 1200px) and (min-width: 768px) {
     .stats, .stats:not(:last-child) {
         border-color: #fff0;

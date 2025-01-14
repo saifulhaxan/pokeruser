@@ -89,6 +89,7 @@ const VideoBox = ({ item, index, onApiResponse, list }) => {
                     src={item?.videoUpload}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
+                    controlsList="nodownload"
                     muted
                     onLoadedMetadata={(e) =>
                         handleMetadataLoaded(index, e.target.duration)
