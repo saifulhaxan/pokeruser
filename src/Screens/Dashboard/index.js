@@ -184,7 +184,7 @@ export const Dashboard = () => {
 
                   </div>
                   {
-                    Array.isArray(saveVideo?.favoriteLectures) && saveVideo?.favoriteLectures.length > 0 ? (
+                    Array?.isArray(saveVideo?.favoriteLectures) && saveVideo?.favoriteLectures?.length > 0 ? (
                       saveVideo?.favoriteLectures?.slice(0, 8)?.map((item, index) => (
                         <div className="col-xxl-3 col-xl-4 col-md-6 mb-5" key={index}>
                           <VideoBox

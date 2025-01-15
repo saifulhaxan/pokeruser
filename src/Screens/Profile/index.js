@@ -7,8 +7,10 @@ import { DashboardLayout } from "../../Components/Layout/DashboardLayout";
 import CustomButton from "../../Components/CustomButton";
 
 import './style.css'
-import { useGet } from "../../Api";
+import { useGet, usePost } from "../../Api";
 import { logo, male1 } from "../../Assets/images";
+import CustomModal from "../../Components/CustomModal";
+import { base_url } from "../../Api/apiConfig";
 
 
 const Profile = () => {
@@ -16,7 +18,11 @@ const Profile = () => {
     const navigate = useNavigate()
 
     const [userData, setUserData] = useState({});
+    const [showModal, setShowModal] = useState(false);
+    const [showModal2, setShowModal2] = useState(false);
+    const LogoutData = localStorage.getItem('login');
     const { ApiData: UsersData, loading: UsersLoading, error: UsersError, get: GetUsers } = useGet(`user/me`);
+    const { ApiData: SubscriptionCancelData, loading: SubscriptionCancelLoading, error: SubscriptionCancelError, post: GetSubscriptionCancel } = usePost(`user/cancelSubscription `);
     useEffect(() => {
         if (UsersData) {
             setUserData(UsersData);
@@ -30,15 +36,45 @@ const Profile = () => {
         GetUsers()
     }, []);
 
+    const Continue = () => {
+        fetch(`${base_url}user/cancel/subscription`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${LogoutData}`, // Pass token in Authorization header
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Subscription cancelled:', data);
+                setShowModal(false)
+                setShowModal2(true)
+            })
+            .catch((error) => console.error("Error cancelling subscription:", error));
+    };
+
+
+
+    const handleRedirect = () => {
+        alert()
+    }
+
     return (
         <>
             <DashboardLayout>
                 <div className="dashCard mb-4">
-                    <div className="row mb-3">
-                        <div className="col-12">
+                    <div className="row mb-3 align-items-center justify-content-between">
+                        <div className="col-md-6">
                             <h2 className="mainTitle">
                                 My Profile
                             </h2>
+                        </div>
+                        <div className="col-md-6">
+                            <div className="d-flex justify-content-end">
+                                <button type="button" className="btn primaryButton px-4 rounded-5" onClick={() => { setShowModal(true) }}>
+                                    Cancel Subscription
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div className="row mb-3">
@@ -47,7 +83,7 @@ const Profile = () => {
                                 <div className="row mb-3">
                                     <div className="col-lg-4 order-2 order-lg-1 mb-3">
                                         <div className="profileImage">
-                                        <img src={userData?.profilePicture === null ? logo : userData?.profilePicture } alt="User" />
+                                            <img src={userData?.profilePicture === null ? logo : userData?.profilePicture} alt="User" />
                                         </div>
                                     </div>
                                 </div>
@@ -102,6 +138,8 @@ const Profile = () => {
 
                     </div>
                 </div>
+                <CustomModal show={showModal} action={Continue} close={() => { setShowModal(false) }} heading='Are you sure you want to cancel your subscription?' />
+                <CustomModal show={showModal2} close={() => { setShowModal2(false) }} success heading='Subscription Cancelled Successfully' />
             </DashboardLayout>
         </>
     );

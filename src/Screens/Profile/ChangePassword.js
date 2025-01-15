@@ -10,6 +10,7 @@ import CustomButton from "../../Components/CustomButton";
 import CustomModal from "../../Components/CustomModal";
 
 import './style.css'
+import { usePatch } from "../../Api";
 
 const ChangePassword = () => {
 
@@ -19,6 +20,8 @@ const ChangePassword = () => {
 
     const [showModal, setShowModal] = useState(false);
 
+      const { ApiData: passwordData, loading: passwordLoading, error: passwordError, patch: Getpassword } = usePatch(`user/update/password`);
+
     const handleClickPopup = ()=> {
         setShowModal(true);
     }
@@ -26,11 +29,37 @@ const ChangePassword = () => {
     useEffect(() => {
 
         document.title = 'Poker City | Change Password';
-
-        setUserData(currentUser);
     }, []);
 
-    return (
+
+    
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setUserData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+        console.log('userData', userData)
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(userData?.password && userData?.confirmPassword) {
+            Getpassword(userData);
+        }
+    }
+
+
+    useEffect(()=>{
+        if(passwordData) {
+            setShowModal(true);
+            setTimeout(()=>{
+                setShowModal(false);
+            },1500)
+        }
+    },[passwordData])
+
+     return (
         <>
             <DashboardLayout>
                 <div className="dashCard mb-4">
@@ -44,25 +73,20 @@ const ChangePassword = () => {
                     </div>
                     <div className="row mb-3">
                         <div className="col-xl-4 col-lg-4">
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <div className="row mb-3">
                                     <div className="col-12">
-                                        <CustomInput label="Current Password" labelClass="mainLabel" required type="password" placeholder="Enter Current Password" inputClass="mainInput" />
+                                        <CustomInput label="New Password" name="password" labelClass="mainLabel" required type="password" placeholder="Enter New Password" inputClass="mainInput" onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="row mb-3">
                                     <div className="col-12">
-                                        <CustomInput label="New Password" labelClass="mainLabel" required type="password" placeholder="Enter New Password" inputClass="mainInput" />
+                                        <CustomInput label="Confirm New Password" name="confirmPassword" labelClass="mainLabel" required type="password" placeholder="Confirm New Password" inputClass="mainInput" onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div className="row mb-3">
                                     <div className="col-12">
-                                        <CustomInput label="Confirm New Password" labelClass="mainLabel" required type="password" placeholder="Confirm New Password" inputClass="mainInput" />
-                                    </div>
-                                </div>
-                                <div className="row mb-3">
-                                    <div className="col-12">
-                                        <CustomButton type="button" variant="primaryButton" className="me-3 mb-2" text="Update" onClick={handleClickPopup} />
+                                        <CustomButton type="submit" variant="primaryButton" className="me-3 mb-2" text="Update" />
                                     </div>
                                     
                                 </div>

@@ -25,3 +25,8 @@
     padding-left: 0px;
     color: #017947;
 }
+
+.btn.primaryButton:hover {
+    background-color: #017947cf;
+    color: #fff;
+}
