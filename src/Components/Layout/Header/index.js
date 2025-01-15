@@ -95,7 +95,7 @@ export const Header = (props) => {
           >
             <Nav className="ms-auto">
               <Dropdown className="notiDropdown me-2">
-                <Dropdown.Toggle variant="transparent" className="notButton">
+                {/* <Dropdown.Toggle variant="transparent" className="notButton">
                   <FontAwesomeIcon className="bellIcon" icon={faBell} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="notiMenu" align="end">
@@ -125,7 +125,7 @@ export const Header = (props) => {
                   <div className="notiFooter">
                     <Link to={"/notifications"}>View All</Link>
                   </div>
-                </Dropdown.Menu>
+                </Dropdown.Menu> */}
               </Dropdown>
               <Dropdown className="userDropdown">
                 <Dropdown.Toggle
