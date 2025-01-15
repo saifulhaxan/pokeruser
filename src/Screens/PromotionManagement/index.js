@@ -15,7 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Dropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV, faEye, faCheck, faTimes, faFilter, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faEye, faCheck, faTimes, faFilter, faEdit, faTrash, faClock, faStar } from "@fortawesome/free-solid-svg-icons";
 
 import { DashboardLayout } from "../../Components/Layout/DashboardLayout";
 import CustomTable from "../../Components/CustomTable";
@@ -26,173 +26,111 @@ import CustomInput from "../../Components/CustomInput";
 import CustomButton from "../../Components/CustomButton";
 
 
-import "./style.css";
-import { useGet } from "../../Api";
-import { logo } from "../../Assets/images";
+// import "./style.css";
+import { useDelete, useGet } from "../../Api";
+import VideoBox from "../../Components/videoBox";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const PromotionManagement = () => {
-  const [data, setData] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [showModal2, setShowModal2] = useState(false);
-  const [showModal3, setShowModal3] = useState(false);
-  const [showModal4, setShowModal4] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(8);
-  const [inputValue, setInputValue] = useState('');
-  const { ApiData: UseeListingData, loading: UseeListingLoading, error: UseeListingError, get: GetUseeListing } = useGet(`promotion`);
+    const [data, setData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [showModal2, setShowModal2] = useState(false);
+    const [showModal3, setShowModal3] = useState(false);
+    const [showModal4, setShowModal4] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(8);
+    const [inputValue, setInputValue] = useState('');
+    const [saveVideo, setSave] = useState([{}]);
+    const [delID, setDelID] = useState('');
+    const { ApiData: SavedVideosData, loading: SavedVideosLoading, error: SavedVideosError, get: GetSavedVideos } = useGet(`promotion`);
+    const { ApiData: TagDeleteData, loading: TagDeleteLoading, error: TagDeleteError, del: GetTagDelete } = useDelete(`lectures/${delID}`);
 
 
-  const navigate = useNavigate();
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  console.log();
-
-  const hanldeRoute = () => {
-    navigate('/add-promotion')
-  }
+    const navigate = useNavigate();
 
 
-  const inActive = () => {
-    setShowModal(false)
-    setShowModal2(true)
-  }
-  const ActiveMale = () => {
-    setShowModal3(false)
-    setShowModal4(true)
-  }
+    useEffect(() => {
+        document.title = 'Poker | Promotion Management';
+        GetSavedVideos()
 
-  const handleChange = (e) => {
-    setInputValue(e.target.value);
-  }
-
-  const filterData = data.filter(item =>
-    item?.title?.toLowerCase().includes(inputValue.toLowerCase())
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filterData.slice(indexOfFirstItem, indexOfLastItem);
+    }, []);
 
 
-
-
-  useEffect(() => {
-    document.title = 'Poker | Promotion Management';
-    GetUseeListing()
-
-  }, []);
-
-
-  useEffect(()=>{
-    if(UseeListingData) {
-      setData(UseeListingData)
+    const handleChange = (e) => {
+        setInputValue(e.target.value);
     }
-  },[UseeListingData])
 
-  const maleHeaders = [
-    {
-      key: "id",
-      title: "S.No",
-    },
-    {
-      key: "img",
-      title: "Thumbnail",
-    },
-    {
-      key: "username",
-      title: "Title",
-    },
-    {
-      key: "status",
-      title: "Status",
-    },
-    {
-      key: "created_at",
-      title: "Created On",
-    },
-    {
-      key: "action",
-      title: "Action",
-    },
-  ];
+    useEffect(() => {
+        if (SavedVideosData) {
+            setSave(SavedVideosData)
+        }
+    }, [SavedVideosData])
+
+    useEffect(() => {
+        console.log('save', saveVideo);
+    }, [saveVideo])
+
+    const handleApiResponse = (response) => {
+        console.log('API Response:', response?.message);
+
+        // Use a unique toast ID to prevent duplicate toasts
+        toast(response?.message, { toastId: 'unique-toast-id' });
+
+        // Refresh the saved videos
+        GetSavedVideos();
+    };
 
 
-  return (
-    <>
-      <DashboardLayout>
-        <div className="container-fluid">
-          <div className="row mb-3">
-            <div className="col-12">
-              <div className="dashCard">
-                <div className="row mb-3 justify-content-between">
-                  <div className="col-md-6 mb-2">
-                    <h2 className="mainTitle">Promotion Management</h2>
-                  </div>
-                  <div className="col-md-6 mb-2">
-                    <div className="addUser">
-                      <CustomButton text="Add New promotion" variant='primaryButton' onClick={hanldeRoute} />
-                      <CustomInput type="text" placeholder="Search Here..." value={inputValue} inputClass="mainInput" onChange={handleChange} />
+
+
+
+
+
+
+    return (
+        <>
+            <DashboardLayout>
+                <div className="container-fluid">
+                    <div className="row mb-3">
+                        <div className="col-12">
+                            <div className="dashCard">
+                                <div className="row mb-3 justify-content-between">
+                                    <div className="col-md-6 mb-2">
+                                        <h2 className="mainTitle">Promotion Management</h2>
+                                    </div>
+                                    <div className="col-md-6 mb-2">
+                                        <div className="addUser">
+                                            {/* <CustomButton text="Add New Lecture" variant='primaryButton' onClick={hanldeRoute} /> */}
+                                            <CustomInput type="text" placeholder="Search Here..." value={inputValue} inputClass="mainInput" onChange={handleChange} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row mb-3">
+                                    {
+                                        saveVideo.filter(item => item?.title?.toLowerCase().includes(inputValue.toLowerCase()))?.map((item, index) => (
+                                            <div className="col-xxl-12 col-xl-12 col-md-12 mb-5" key={index}>
+                                                <div className="promotionBox">
+                                                    <div className="imageBoxPromo">
+                                                        <img src={item?.image} className="mw-100" />
+                                                    </div>
+                                                    <div className="promoContent shadow p-3">
+                                                        <h3>{item?.title}</h3>
+                                                        <p>{item?.description}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div className="row mb-3">
-                  <div className="col-12">
-                    <CustomTable
-                      headers={maleHeaders}
-
-                    >
-                      <tbody>
-                        {currentItems?.map((item, index) => (
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td><img src={item?.image ? item?.image : logo}  className="avatarIcon" /></td>
-                            <td className="text-capitalize">
-                              {item?.title}
-                            </td>
-                            <td className={item?.status == true ? 'greenColor' : "redColor"}>{item?.status == true ? 'Active' : "Inactive"}</td>
-                            <td>{item?.createdAt}</td>
-                            <td>
-                              <Dropdown className="tableDropdown">
-                                <Dropdown.Toggle variant="transparent" className="notButton classicToggle">
-                                  <FontAwesomeIcon icon={faEllipsisV} />
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu align="end" className="tableDropdownMenu">
-
-                                  <Link to={`/promotion-management/promotion-details/${item?.id}`} className="tableAction"><FontAwesomeIcon icon={faEye} className="tableActionIcon" />View</Link>
-                                  <Link to={`/edit-promotion/${item?.id}`} className="tableAction"><FontAwesomeIcon icon={faEdit} className="tableActionIcon" />Edit</Link>
-
-                                </Dropdown.Menu>
-                              </Dropdown>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </CustomTable>
-                    <CustomPagination
-                      itemsPerPage={itemsPerPage}
-                      totalItems={data?.length}
-                      currentPage={currentPage}
-                      onPageChange={handlePageChange}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <CustomModal show={showModal} close={() => { setShowModal(false) }} action={inActive} heading='Are you sure you want to mark this user as inactive?' />
-          <CustomModal show={showModal2} close={() => { setShowModal2(false) }} success heading='Marked as Inactive' />
-
-          <CustomModal show={showModal3} close={() => { setShowModal3(false) }} action={ActiveMale} heading='Are you sure you want to mark this user as Active?' />
-          <CustomModal show={showModal4} close={() => { setShowModal4(false) }} success heading='Marked as Active' />
-
-
-
-        </div>
-      </DashboardLayout>
-    </>
-  );
+                <ToastContainer />
+            </DashboardLayout>
+        </>
+    );
 };

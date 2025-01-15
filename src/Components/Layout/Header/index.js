@@ -164,7 +164,7 @@ export const Header = (props) => {
           <button className="notButton ms-md-2 order-lg-4 order-md-4 order-1">
             <FontAwesomeIcon
               className="bell-icon"
-              onClick={props.sidebarToggle}
+              onClick={props?.sidebarToggle}
               icon={faBars}
             />
           </button>

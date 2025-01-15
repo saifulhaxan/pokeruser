@@ -63,7 +63,7 @@ export const SavedVideos = () => {
 
     useEffect(() => {
         if (SavedVideosData) {
-            setSave(SavedVideosData)
+            setSave(SavedVideosData?.favoriteLectures)
         }
     }, [SavedVideosData])
 
@@ -80,6 +80,8 @@ export const SavedVideos = () => {
         // Refresh the saved videos
         GetSavedVideos();
       };
+
+
 
 
 
@@ -106,13 +108,13 @@ export const SavedVideos = () => {
                                 </div>
                                 <div className="row mb-3">
                                     {
-                                        Array.isArray(saveVideo?.favoriteLectures) && saveVideo.favoriteLectures.length > 0 ? (
-                                            saveVideo.favoriteLectures?.map((item, index) => (
+                                        Array.isArray(saveVideo) && saveVideo?.length > 0 ? (
+                                            saveVideo.filter(item => item?.name?.toLowerCase().includes(inputValue.toLowerCase()))?.map((item, index) => (
                                                 <div className="col-xxl-3 col-xl-4 col-md-6 mb-5" key={index}>
                                                     <VideoBox
                                                         key={item?.id}
                                                         item={item}
-                                                        list={saveVideo?.favoriteLectures}
+                                                        list={saveVideo}
                                                         index={index}
                                                         onApiResponse={handleApiResponse}
                                                     />

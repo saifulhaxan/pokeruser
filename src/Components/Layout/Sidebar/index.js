@@ -38,7 +38,7 @@ export const Sidebar = (props) => {
   const location = useLocation();
   const isSubscribe = localStorage.getItem('isSubscribe');
   return (
-    <div className={`sidebar ${props.sideClass}`} id="sidebar">
+    <div className={`sidebar ${props?.sideClass}`} id="sidebar">
       {
         isSubscribe && isSubscribe == "true" ? (
           <ul className="list-unstyled">
@@ -93,7 +93,7 @@ export const Sidebar = (props) => {
               </Link>
             </li>
             <li className="sidebar-li">
-              <Link className={`sideLink ${location.pathname.includes('#') ? 'active' : ''}`} to="#">
+              <Link className={`sideLink ${location.pathname.includes('/promotion-management') ? 'active' : ''}`} to="/promotion-management">
                 <span className="sideIcon">
                   <FontAwesomeIcon icon={faAd} />
                 </span>

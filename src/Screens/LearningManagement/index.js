@@ -46,7 +46,8 @@ export const LectureManagement = () => {
   const [showModal4, setShowModal4] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(null);
+  const [categoryFlterd, setCategoryFilter] = useState('');
   const [delID, setDelID] = useState('');
   const [categories, setCategories] = useState();
   const [displayData, setDisplayData] = useState([]);
@@ -187,25 +188,14 @@ export const LectureManagement = () => {
 
   const handleCategorySelect = (e) => {
     const selectedCategoryId = e.target.value;
-
-    if (selectedCategoryId == "undifiend") {
-      // User selected "Select Category", reset to show all data
-      GetUseeListing(); // Ensure this function resets the data appropriately
-      setTitle('All');
+    if (selectedCategoryId == '') {
+      setCategoryFilter('')
     } else {
-      // User selected a specific category
-      const selectedCategoryName = e.target.options[e.target.selectedIndex].text;
-      setTitle(selectedCategoryName);
-
-      const filteredData = data.filter(item =>
-        item.category.id === parseInt(selectedCategoryId, 10)
-      );
-
-      setDisplayData(filteredData);
+      setCategoryFilter(selectedCategoryId)
     }
   };
 
-  console.log('dd', displayData)
+  console.log('dd', lecturesData)
 
 
 
@@ -260,9 +250,9 @@ export const LectureManagement = () => {
                       {/* <CustomButton text="Add New Lecture" variant='primaryButton' onClick={hanldeRoute} /> */}
                       <CustomInput type="text" placeholder="Search Here..." value={inputValue} inputClass="mainInput flex-shrink-0" onChange={handleChange} />
                       <select name="category" className="mainInput w-50" onChange={handleCategorySelect}>
-                        <option value="undifiend">Select Category</option>
+                        <option value={''}>Select Category</option>
                         {categories && categories.map((item) => (
-                          <option key={item.id} value={item.id}>{item.title}</option>
+                          <option key={item.id} value={item.title}>{item.title}</option>
                         ))}
                       </select>
 
@@ -275,40 +265,49 @@ export const LectureManagement = () => {
                   </div>
 
                   {Object.keys(lecturesData)?.length > 0 ? (
-                    Object.entries(lecturesData)?.map(([categoryTitle, categoryData], index) => (
-                      <div key={index} className="mainCategoryBox mb-5">
-                        <div className="catgoryMeta">
-                          <div className="subTitle">{categoryTitle}</div>
-                          {/* Progress bar for each category */}
-                          <div className="progress-container">
-                            <div
-                              className="progress-bar"
-                              style={{ width: `${categoryData.progress[0]?.progressPercentage || 0}%` }}
-                            >
-                              {`${Math.floor(categoryData.progress[0]?.progressPercentage || 0)}%`}
+                    Object.entries(lecturesData)
+                      ?.filter(([categoryTitle]) => !categoryFlterd || categoryFlterd === categoryTitle) // Filter categories based on categoryFlterd
+                      .map(([categoryTitle, categoryData], index) => (
+                        <div key={index} className="mainCategoryBox mb-5">
+                          <div className="catgoryMeta">
+                            <div className="subTitle">{categoryTitle}</div>
+                            {/* Progress bar for each category */}
+                            <div className="progress-container">
+                              <div
+                                className="progress-bar"
+                                style={{ width: `${categoryData.progress[0]?.progressPercentage || 0}%` }}
+                              >
+                                {`${Math.floor(categoryData.progress[0]?.progressPercentage || 0)}%`}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <Slider {...sliderSettings}>
-                          {categoryData?.lectures
-                            ?.sort((a, b) => a.order - b.order) // Sort lectures by the 'order' key
-                            .map((item, idx) => (
-                              <div className="p-2" key={item.id || idx}>
-                                <VideoBox
-                                  item={item}
-                                  list={[...categoryData?.lectures]}
-                                  index={idx}
-                                  onApiResponse={handleApiResponse}
-                                />
-                              </div>
-                            ))}
-                        </Slider>
-                      </div>
-                    ))
+                          <Slider {...sliderSettings}>
+                            {categoryData?.lectures
+                              ?.sort((a, b) => a.order - b.order) // Sort lectures by the 'order' key
+                              .filter((item) =>
+                                inputValue
+                                  ? item?.name?.toLowerCase().includes(inputValue.toLowerCase())
+                                  : true // If inputValue is empty, include all items
+                              )
+                              .map((item, idx) => (
+                                <div className="p-2" key={item.id || idx}>
+                                  <VideoBox
+                                    item={item}
+                                    list={[...categoryData?.lectures]}
+                                    index={idx}
+                                    onApiResponse={handleApiResponse}
+                                  />
+                                </div>
+                              ))}
+                          </Slider>
+
+                        </div>
+                      ))
                   ) : (
                     <div>Loading...</div>
                   )}
+
 
 
 

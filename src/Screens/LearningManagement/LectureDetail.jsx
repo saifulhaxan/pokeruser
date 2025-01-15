@@ -204,6 +204,7 @@ export const LectureDetails = () => {
                                             ref={videoRef}
                                             controls
                                             src={details?.videoUpload}
+                                            controlsList="nodownload"
                                             onPlay={handlePlay}
                                             onPause={handlePause}
                                             onTimeUpdate={handleTimeUpdate}

@@ -37,9 +37,7 @@ import { AddCourse } from "../Screens/CourseManagement/AddCourse";
 import { EditCourse } from "../Screens/CourseManagement/EditCourse";
 import { CourseDetails } from "../Screens/CourseManagement/CourseDetail";
 import { PromotionManagement } from "../Screens/PromotionManagement";
-import { AddPromotion } from "../Screens/PromotionManagement/AddPromotion";
-import { EditPromotion } from "../Screens/PromotionManagement/EditPromotion";
-import { PromotionDetails } from "../Screens/PromotionManagement/PromotionDetail";
+
 import { LectureManagement } from "../Screens/LearningManagement";
 import { AddLecture } from "../Screens/LearningManagement/AddLecture";
 import { EditLecture } from "../Screens/LearningManagement/EditLecture";
@@ -106,9 +104,6 @@ export default function AdminRouter() {
         <Route path="/content-library" element={<ProtectedRoutes Components={ContentLibrary} />} />
 
         <Route path="/promotion-management" element={<ProtectedRoutes Components={PromotionManagement} />} />
-        <Route path="/add-promotion" element={<ProtectedRoutes Components={AddPromotion} />} />
-        <Route path="/edit-promotion/:id" element={<ProtectedRoutes Components={EditPromotion} />} />
-        <Route path="/promotion-management/promotion-details/:id" element={<ProtectedRoutes Components={PromotionDetails} />} />
 
         <Route path="/select-plan" element={<ProtectedRoutes Components={Membership} />} />
         <Route path="/saved-videos" element={<ProtectedRoutes Components={SavedVideos} />} />
