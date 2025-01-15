@@ -16,10 +16,10 @@ import { DashboardLayout } from "../../Components/Layout/DashboardLayout";
 import BackButton from "../../Components/BackButton";
 import CustomModal from "../../Components/CustomModal";
 import CustomButton from "../../Components/CustomButton";
-import { useGet, usePatch } from "../../Api";
+import { useGet, usePatch, usePost } from "../../Api";
 import FormatDateTime from "../../Components/DateFormate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import io from 'socket.io-client';
 
 export const LectureDetails = () => {
@@ -32,10 +32,13 @@ export const LectureDetails = () => {
     const [showModal2, setShowModal2] = useState(false);
     const [showModal3, setShowModal3] = useState(false);
     const [showModal4, setShowModal4] = useState(false);
+    const [formData, setFormData] = useState({});
     const [message, setMessage] = useState(false)
+    const [wishID, setWhistID] = useState();
     const { ApiData: UseeListingData, loading: UseeListingLoading, error: UseeListingError, get: GetUseeListing } = useGet(`lectures/${id}`);
     const { ApiData: StatusUpdateData, loading: StatusUpdateLoading, error: StatusUpdateError, patch: GetStatusUpdate } = usePatch(`courses/${id}`);
     const { ApiData: UseeListingDetailData, loading: UseeListingDetailLoading, error: UseeListingDetailError, get: GetUseeListingDetail } = useGet(`lectures`);
+    const { ApiData: AddSavedData, loading: AddSavedLoading, error: AddSavedError, post: GetAddSaved } = usePost(`user/create-favorite`);
 
     const inActive = () => {
         setShowModal(false)
@@ -50,6 +53,12 @@ export const LectureDetails = () => {
         }, 1000)
         console.log('status', status)
     }
+
+    useEffect(()=>{
+        if(AddSavedData) {
+            GetUseeListing()
+        }
+    },[AddSavedData])
     const Active = () => {
         setShowModal3(false)
         setStatus({
@@ -174,10 +183,21 @@ export const LectureDetails = () => {
     const progress = calculateProgress(details?.lectureProgress?.[0]?.watchedSeconds, details?.lectureLength);
 
     useEffect(() => {
-        if (UseeListingData) {
-            
+        if (formData?.lectureId) {
+            GetAddSaved(formData)
+
         }
-    }, [UseeListingData])
+    }, [formData])
+
+    const handleHeartClick = (id) => {
+        // setWhistID(details?.isFavourite);
+
+        setFormData({
+            ...formData,
+            lectureId: id
+        })
+        // setIsLiked((prevLiked) => !prevLiked); // Toggle the liked state
+    };
 
 
     return (
@@ -200,6 +220,7 @@ export const LectureDetails = () => {
                                         <div className="progress-container">
                                             <div className="progress-bar" style={{ width: `${progress}%` }}>  {`${Math.floor(progress)}%`}</div>
                                         </div>
+                                        <div className="position-relative">
                                         <video width="100%" className=""
                                             ref={videoRef}
                                             controls
@@ -210,6 +231,17 @@ export const LectureDetails = () => {
                                             onTimeUpdate={handleTimeUpdate}
 
                                         ></video>
+
+                                        {/* Wishlist heart icon */}
+                                        <div className="wishlistIcon" >
+                                            <button onClick={() => { handleHeartClick(details?.id) }} type='button' className='border-0 bg-transparent'>
+                                                <FontAwesomeIcon
+                                                    icon={faHeart}
+                                                    className={`heartIcon ${details?.isFavourite ? 'filled' : 'empty'}`}
+                                                />
+                                            </button>
+                                        </div>
+                                        </div>
 
                                         <div className="row">
                                             <div className="col-md-12 mb-3">
